@@ -3,5 +3,6 @@
 #Idea configuration
 .idea/
 
-#Gradle configuration
+#Local configuration
 .gradle/
+local.properties
