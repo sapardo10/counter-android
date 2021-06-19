@@ -4,11 +4,12 @@ import com.cornershop.data.datasources.ICounterLocalDataSource
 import com.cornershop.data.datasources.ICounterRemoteDataSource
 import com.cornershop.data.models.Counter
 import com.cornershop.data.models.Result
+import javax.inject.Inject
 
 /**
  * Implementation of [ICounterRepository]
  */
-class CounterRepository(
+class CounterRepository @Inject constructor(
     private val localDataSource: ICounterLocalDataSource,
     private val remoteDataSource: ICounterRemoteDataSource
 ): ICounterRepository {
@@ -30,7 +31,15 @@ class CounterRepository(
     }
 
     override suspend fun getAll(): Result<List<Counter>> {
-        TODO("Not yet implemented")
+        println("repository")
+        localDataSource.getAll()
+        return Result.Success(listOf())
+    }
+
+    ///TODO: Delete this testing method
+    fun test() {
+        println("repository")
+        localDataSource.getAll()
     }
 
     override suspend fun increaseCounter(counterId: Int): Result<Boolean> {

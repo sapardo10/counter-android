@@ -1,6 +1,7 @@
 plugins {
     id 'java-library'
     id 'kotlin'
+    id 'kotlin-kapt'
 }
 
 java {
@@ -19,6 +20,9 @@ test {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+    ///Java inject
+    api "javax.inject:javax.inject:1"
 
     ///Coroutines
     api 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0'
