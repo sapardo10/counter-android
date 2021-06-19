@@ -32,6 +32,17 @@ android {
     }
 }
 
+afterEvaluate {
+    rootProject.getSubprojects().findAll {
+        it.name.contains('domain') ||
+        it.name.contains('data')
+    }.each { subModule ->
+        subModule.afterEvaluate {
+            testDebugUnitTest.dependsOn it.tasks.named('test').get()
+        }
+    }
+}
+
 dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
@@ -43,4 +54,6 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    api project(':domain')
 }
