@@ -1,7 +1,7 @@
 package com.cornershop.counterstest.di
 
 import com.cornershop.counterstest.BuildConfig
-import com.cornershop.counterstest.network.CounterApi
+import com.cornershop.counterstest.network.apis.CounterApi
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
@@ -18,7 +18,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
     @Provides
-    fun provideCounterApi():CounterApi {
+    fun provideCounterApi(): CounterApi {
         val logging = HttpLoggingInterceptor()
         val logLevel = if(BuildConfig.DEBUG) {
             Level.BODY

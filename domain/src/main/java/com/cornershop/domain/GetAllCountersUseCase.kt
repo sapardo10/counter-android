@@ -19,7 +19,7 @@ interface IGetAllCountersUseCase {
      * Invocation of the use case
      * @return A [Flow] with a [List] of [Counter] if success, and a failure reason if failed.
      */
-    operator fun invoke(): Flow<Result<List<Counter>>>
+    suspend operator fun invoke(): Flow<Result<List<Counter>>>
 }
 
 /**
@@ -28,13 +28,7 @@ interface IGetAllCountersUseCase {
 class GetAllCountersUseCase @Inject constructor(
         private val counterRepository: CounterRepository
 ): IGetAllCountersUseCase {
-    override fun invoke(): Flow<Result<List<Counter>>> {
-        println("use case")
-        return flow {
-            emit(counterRepository.getAll())
-            emit(Result.Success(listOf()))
-            kotlinx.coroutines.delay(10000)
-            emit(Result.Failure(CounterError.NETWORK_ERROR))
-        }
+    override suspend operator fun invoke(): Flow<Result<List<Counter>>> {
+        return counterRepository.getAll()
     }
 }

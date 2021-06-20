@@ -1,4 +1,4 @@
-package com.cornershop.counterstest.network
+package com.cornershop.counterstest.network.apis
 
 import com.cornershop.counterstest.network.dtos.CounterDTO
 import retrofit2.http.GET

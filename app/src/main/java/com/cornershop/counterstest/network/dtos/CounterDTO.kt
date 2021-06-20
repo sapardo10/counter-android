@@ -6,7 +6,7 @@ data class CounterDTO (
     @SerializedName("count")
     val count: Int,
     @SerializedName("id")
-    val id: String,
+    val id: Int,
     @SerializedName("title")
     val title: String
 )

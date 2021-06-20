@@ -3,6 +3,7 @@ package com.cornershop.data.repositories
 import com.cornershop.data.models.Counter
 import com.cornershop.data.models.CounterError
 import com.cornershop.data.models.Result
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Interface holding the contract for the repository that will handle all data transactions
@@ -34,7 +35,7 @@ interface ICounterRepository {
      * Method that returns all the counters available for the user
      * @return If success, [List] of [Counter]. If failure, a [CounterError]
      */
-    suspend fun getAll(): Result<List<Counter>>
+    suspend fun getAll(): Flow<Result<List<Counter>>>
 
     /**
      * Method that increases by one the count of a counter

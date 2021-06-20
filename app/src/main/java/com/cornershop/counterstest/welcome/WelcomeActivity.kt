@@ -2,6 +2,7 @@ package com.cornershop.counterstest.welcome
 
 import android.os.Bundle
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -21,18 +22,18 @@ class WelcomeActivity : AppCompatActivity() {
         ///TODO: delete this testing lines
         val image = findViewById<ImageView>(R.id.imageLogo)
         image.setOnClickListener {
-            println("all good")
+            viewModel.onCreateCounterTapped()
         }
+
+        val textDescription = findViewById<TextView>(R.id.textDescription)
         viewModel.counters.observe(this, {
-            if(it is Result.Success) {
-                image.setOnClickListener {
-                    println("all good")
-                }
-            } else {
-                image.setOnClickListener {
-                    println("all bad")
-                }
+            it?.let { list ->
+                var text = ""
+                list.forEach { counter -> text += "\n $counter" }
+                textDescription.text = text
             }
         })
+
+        viewModel.initViewModel()
     }
 }
