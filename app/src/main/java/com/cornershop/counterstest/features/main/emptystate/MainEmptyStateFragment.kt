@@ -13,7 +13,7 @@ class MainEmptyStateFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_main_loading, container, false)
+        return inflater.inflate(R.layout.fragment_main_empty_state, container, false)
     }
 
     companion object {

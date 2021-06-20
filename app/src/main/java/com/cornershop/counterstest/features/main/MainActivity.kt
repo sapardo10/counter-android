@@ -10,6 +10,7 @@ import com.cornershop.counterstest.core.BaseActivity
 import com.cornershop.counterstest.databinding.ActivityMainBinding
 import com.cornershop.counterstest.utils.setOnSingleClickListener
 import com.cornershop.counterstest.features.create.CreateActivity
+import com.cornershop.counterstest.features.main.emptystate.MainEmptyStateFragment
 import com.cornershop.counterstest.features.main.loading.MainLoadingFragment
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -30,11 +31,11 @@ class MainActivity: BaseActivity() {
         setContentView(binding.root)
         initializeObservers()
         initializeInteractionsListener()
-        viewModel.initializeView()
         supportFragmentManager.commit {
             setReorderingAllowed(true)
             add<MainLoadingFragment>(R.id.fragment_container_view)
         }
+        viewModel.initializeView()
     }
 
     /**
@@ -70,7 +71,12 @@ class MainActivity: BaseActivity() {
      */
     private fun initializeCountersObserver() {
         viewModel.counters.observe(this, {
-            //TODO(Update recycler view)
+            if(it.isEmpty()) {
+                supportFragmentManager.commit {
+                    setReorderingAllowed(true)
+                    replace(R.id.fragment_container_view, MainEmptyStateFragment.newInstance())
+                }
+            }
         })
     }
 

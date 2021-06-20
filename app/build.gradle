@@ -23,7 +23,7 @@ android {
         debug {
             manifestPlaceholders = [usesCleartextTraffic:"true"]
 
-            buildConfigField "String", 'BASE_URL', "\"http://9a0ace022bfd.ngrok.io/api/\""
+            buildConfigField "String", 'BASE_URL', "\"https://1db7eb2a8acb.ngrok.io/api/\""
         }
         release {
             minifyEnabled false

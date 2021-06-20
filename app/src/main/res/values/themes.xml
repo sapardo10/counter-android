@@ -12,6 +12,7 @@
         <item name="android:textColorTertiary">@color/light_gray</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorSecondary</item>
+        <item name="fontFamily">@font/roboto</item>
     </style>
 
     <!-- Screen theme -->
@@ -42,6 +43,16 @@
 
     <style name="Theme.ProgressLoaderTheme" parent="Theme.CountersNormal">
         <item name="android:indeterminateTint">?attr/colorPrimary</item>
+    </style>
+
+    <style name="Theme.SearchField" parent="Theme.CountersNormal">
+        <item name="android:drawablePadding">16dp</item>
+        <item name="android:paddingStart">26dp</item>
+        <item name="android:paddingEnd">26dp</item>
+        <item name="android:paddingTop">18dp</item>
+        <item name="android:paddingBottom">18dp</item>
+        <item name="android:drawableStart">@drawable/ic_search</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
 
