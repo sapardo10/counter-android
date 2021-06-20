@@ -8,6 +8,6 @@ import com.cornershop.data.models.Counter
  */
 interface ICounterLocalDataSource {
 
-    fun getAll()
+    suspend fun getAll()
 
 }

@@ -1,9 +1,13 @@
 package com.cornershop.counterstest.datasources
 
+import com.cornershop.counterstest.network.CounterApi
 import com.cornershop.data.datasources.ICounterLocalDataSource
 
-class CounterLocalDataSource: ICounterLocalDataSource {
-    override fun getAll() {
-        println("data source")
+class CounterLocalDataSource(
+        private val counterApi: CounterApi
+): ICounterLocalDataSource {
+
+    override suspend fun getAll() {
+        val result = counterApi.getCounters()
     }
 }

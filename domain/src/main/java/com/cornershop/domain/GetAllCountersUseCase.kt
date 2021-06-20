@@ -30,8 +30,8 @@ class GetAllCountersUseCase @Inject constructor(
 ): IGetAllCountersUseCase {
     override fun invoke(): Flow<Result<List<Counter>>> {
         println("use case")
-        counterRepository.test()
         return flow {
+            emit(counterRepository.getAll())
             emit(Result.Success(listOf()))
             kotlinx.coroutines.delay(10000)
             emit(Result.Failure(CounterError.NETWORK_ERROR))

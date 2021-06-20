@@ -36,12 +36,6 @@ class CounterRepository @Inject constructor(
         return Result.Success(listOf())
     }
 
-    ///TODO: Delete this testing method
-    fun test() {
-        println("repository")
-        localDataSource.getAll()
-    }
-
     override suspend fun increaseCounter(counterId: Int): Result<Boolean> {
         TODO("Not yet implemented")
     }
