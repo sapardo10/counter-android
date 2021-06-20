@@ -3,11 +3,9 @@ package com.cornershop.counterstest.features.welcome
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
-import com.cornershop.counterstest.R
 import com.cornershop.counterstest.core.BaseActivity
 import com.cornershop.counterstest.databinding.ActivityWelcomeBinding
-import com.cornershop.counterstest.extensions.setOnSingleClickListener
+import com.cornershop.counterstest.utils.setOnSingleClickListener
 import com.cornershop.counterstest.features.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 

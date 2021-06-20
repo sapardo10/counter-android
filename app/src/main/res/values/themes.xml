@@ -14,6 +14,8 @@
         <item name="android:statusBarColor">?attr/colorSecondary</item>
     </style>
 
+    <!-- Screen theme -->
+
     <style name="Theme.CountersCreate" parent="Theme.CountersNormal">
         <item name="android:windowBackground">@color/welcome_background</item>
     </style>
@@ -24,6 +26,22 @@
 
     <style name="Theme.CountersWelcome" parent="Theme.CountersNormal">
         <item name="android:windowBackground">@color/welcome_background</item>
+    </style>
+
+    <!-- Views theme -->
+    <style name="Theme.ButtonTheme" parent="Theme.CountersNormal">
+        <item name="android:drawablePadding">8dp</item>
+        <item name="android:paddingBottom">18dp</item>
+        <item name="android:paddingEnd">20dp</item>
+        <item name="android:paddingStart">20dp</item>
+        <item name="android:paddingTop">18dp</item>
+        <item name="android:radius">18dp</item>
+        <item name="android:textColor">?attr/colorSecondary</item>
+        <item name="backgroundTint">?attr/colorPrimary</item>
+    </style>
+
+    <style name="Theme.ProgressLoaderTheme" parent="Theme.CountersNormal">
+        <item name="android:indeterminateTint">?attr/colorPrimary</item>
     </style>
 
 

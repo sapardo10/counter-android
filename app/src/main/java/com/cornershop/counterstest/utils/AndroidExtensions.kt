@@ -1,4 +1,4 @@
-package com.cornershop.counterstest.extensions
+package com.cornershop.counterstest.utils
 
 import android.view.View
 import java.util.concurrent.atomic.AtomicBoolean

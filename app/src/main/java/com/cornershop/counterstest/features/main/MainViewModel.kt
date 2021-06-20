@@ -3,6 +3,7 @@ package com.cornershop.counterstest.features.main
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.cornershop.counterstest.utils.SingleLiveEvent
 import com.cornershop.data.models.Counter
 import com.cornershop.data.models.CounterError
 import com.cornershop.data.models.Result
@@ -18,7 +19,7 @@ class MainViewModel @Inject constructor(
 ): ViewModel() {
 
     val counters = MutableLiveData<List<Counter>>()
-    val actions = MutableLiveData<MainViewModelActions>()
+    val actions = SingleLiveEvent<MainViewModelActions?>()
 
     /**
      * -------------------------------------- PUBLIC METHODS ---------------------------------------

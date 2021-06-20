@@ -5,13 +5,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--TODO: Delete harcoded text-->
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_container_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <Button
+        style="@style/Theme.ButtonTheme"
+        android:drawableStart="@drawable/ic_plus"
         android:id="@+id/add_new_counter_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add counter"
-        app:layout_constraintVertical_bias="0.9"
+        android:textAllCaps="true"
+        android:text="@string/add_counters"
+        android:background="@drawable/rounded_corners"
+        app:layout_constraintVertical_bias="0.95"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
