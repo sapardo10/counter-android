@@ -14,7 +14,17 @@
         <item name="android:statusBarColor">?attr/colorSecondary</item>
     </style>
 
+    <style name="Theme.CountersCreate" parent="Theme.CountersNormal">
+        <item name="android:windowBackground">@color/welcome_background</item>
+    </style>
+
+    <style name="Theme.CountersMain" parent="Theme.CountersNormal">
+        <item name="android:windowBackground">@color/welcome_background</item>
+    </style>
+
     <style name="Theme.CountersWelcome" parent="Theme.CountersNormal">
         <item name="android:windowBackground">@color/welcome_background</item>
     </style>
+
+
 </resources>
