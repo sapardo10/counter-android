@@ -11,9 +11,31 @@ import kotlinx.coroutines.withContext
 import java.lang.Exception
 import javax.inject.Inject
 
+/**
+ * Implementation of [ICounterRemoteDataSource]
+ */
 class CounterRemoteDataSource constructor(
     private val counterApi: CounterApi
 ): ICounterRemoteDataSource {
+
+    /**
+     * -------------------------------------- PUBLIC METHODS ---------------------------------------
+     */
+
+    override suspend fun decreaseCounter(counter: Counter): Result<List<Counter>> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val counters = counterApi.decrementCounter(counter.toCounterDTO()).map { it.toCounter() }
+                Success(
+                    data = counters
+                )
+            } catch (e: Exception) {
+                Result.Failure(
+                    error = CounterError.NETWORK_ERROR
+                )
+            }
+        }
+    }
 
     override suspend fun getAll(): Result<List<Counter>> {
         return withContext(Dispatchers.IO) {
@@ -23,6 +45,21 @@ class CounterRemoteDataSource constructor(
                     id = dto.id,
                     name = dto.title
                 ) }
+                Success(
+                    data = counters
+                )
+            } catch (e: Exception) {
+                Result.Failure(
+                    error = CounterError.NETWORK_ERROR
+                )
+            }
+        }
+    }
+
+    override suspend fun increaseCounter(counter: Counter): Result<List<Counter>> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val counters = counterApi.decrementCounter(counter.toCounterDTO()).map { it.toCounter() }
                 Success(
                     data = counters
                 )

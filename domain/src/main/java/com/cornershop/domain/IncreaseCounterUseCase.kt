@@ -12,11 +12,10 @@ interface IIncreaseCounterUseCase {
     /**
      * Invocation of the use case
      * @param counterToIncrement [Counter] that the user wants to increment
-     * @param increment [Int] that indicates how much does the user want to increment the [Counter]
      * @return [Result] as [Result.Success] with [Boolean] or as [Result.Failure] with the failure
      * reason
      */
-    suspend operator fun invoke(counterToIncrement: Counter, increment: Int = 1): Result<Boolean>
+    suspend operator fun invoke(counterToIncrement: Counter): Result<Boolean>
 }
 
 /**
@@ -25,7 +24,12 @@ interface IIncreaseCounterUseCase {
 class IncreaseCounterUseCase(
         private val counterRepository: ICounterRepository
 ): IIncreaseCounterUseCase {
-    override suspend operator fun invoke(counterToIncrement: Counter, increment: Int): Result<Boolean> {
-        TODO("Not yet implemented")
+
+    /**
+     * -------------------------------------- PUBLIC METHODS ---------------------------------------
+     */
+
+    override suspend operator fun invoke(counterToIncrement: Counter): Result<Boolean> {
+        return counterRepository.increaseCounter(counterToIncrement)
     }
 }

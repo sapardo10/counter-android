@@ -8,14 +8,15 @@ import androidx.fragment.app.commit
 import com.cornershop.counterstest.R
 import com.cornershop.counterstest.core.BaseActivity
 import com.cornershop.counterstest.databinding.ActivityMainBinding
-import com.cornershop.counterstest.utils.setOnSingleClickListener
 import com.cornershop.counterstest.features.create.CreateActivity
 import com.cornershop.counterstest.features.main.emptystate.MainEmptyStateFragment
+import com.cornershop.counterstest.features.main.list.MainListFragment
 import com.cornershop.counterstest.features.main.loading.MainLoadingFragment
+import com.cornershop.counterstest.utils.setOnSingleClickListener
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity: BaseActivity() {
+class MainActivity : BaseActivity() {
 
     private val viewModel: MainViewModel by viewModels()
 
@@ -60,21 +61,8 @@ class MainActivity: BaseActivity() {
                 when (action) {
                     is MainViewModelActions.GoToCreateScreen -> navigateToCreateScreen()
                     is MainViewModelActions.ShowListCounterNoInternetConnectionDialog -> println("show list counter no internet connection dialog")
-                    is MainViewModelActions.ShowUpdateCounterNoInternetConnectionDialog -> println("show update counter no internet connection dialog")
-                }
-            }
-        })
-    }
-
-    /**
-     * Method that initializes the counters observer
-     */
-    private fun initializeCountersObserver() {
-        viewModel.counters.observe(this, {
-            if(it.isEmpty()) {
-                supportFragmentManager.commit {
-                    setReorderingAllowed(true)
-                    replace(R.id.fragment_container_view, MainEmptyStateFragment.newInstance())
+                    is MainViewModelActions.ShowEmptyState -> showEmptyState()
+                    is MainViewModelActions.ShowListCounter -> showCounterList()
                 }
             }
         })
@@ -85,7 +73,6 @@ class MainActivity: BaseActivity() {
      */
     private fun initializeObservers() {
         initializeActionsObserver()
-        initializeCountersObserver()
     }
 
     /**
@@ -94,6 +81,26 @@ class MainActivity: BaseActivity() {
     private fun navigateToCreateScreen() {
         val intent = Intent(this, CreateActivity::class.java)
         startActivity(intent)
+    }
+
+    /**
+     * Method that displays the list of counters
+     */
+    private fun showCounterList() {
+        supportFragmentManager.commit {
+            setReorderingAllowed(true)
+            replace(R.id.fragment_container_view, MainListFragment.newInstance())
+        }
+    }
+
+    /**
+     * Method that displays an empty state on the screen
+     */
+    private fun showEmptyState() {
+        supportFragmentManager.commit {
+            setReorderingAllowed(true)
+            replace(R.id.fragment_container_view, MainEmptyStateFragment.newInstance())
+        }
     }
 
 }

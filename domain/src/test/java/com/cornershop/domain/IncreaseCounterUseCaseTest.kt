@@ -1,33 +1,33 @@
-package com.cornershop.domain
+package com.cornershop.domain;
 
 import com.cornershop.data.models.Counter
 import com.cornershop.data.models.CounterError
 import com.cornershop.data.models.Result
 import com.cornershop.data.repositories.ICounterRepository
 import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito.*
 
-import org.junit.jupiter.api.Assertions.*
-import org.mockito.Mockito
+class IncreaseCounterUseCaseTest {
 
-class DecreaseCounterUseCaseTest {
+    lateinit var useCase: IIncreaseCounterUseCase
 
-    lateinit var useCase: IDecreaseCounterUseCase
-
-    var mockCounterRepository: ICounterRepository = Mockito.mock(ICounterRepository::class.java)
+    var mockCounterRepository: ICounterRepository = mock(ICounterRepository::class.java)
 
     @BeforeEach
     fun setUp() {
-        useCase = DecreaseCounterUseCase(
+        useCase = IncreaseCounterUseCase(
             mockCounterRepository
         )
     }
 
     @AfterEach
     fun tearDown() {
-        Mockito.verifyNoMoreInteractions(mockCounterRepository)
+        verifyNoMoreInteractions(mockCounterRepository)
     }
 
     @Test
@@ -35,11 +35,11 @@ class DecreaseCounterUseCaseTest {
         runBlocking {
             val counter = Counter(1,1,"counter")
 
-            Mockito.`when`(mockCounterRepository.decreaseCounter(counter)).thenReturn(Result.Success(data = true))
+            `when`(mockCounterRepository.increaseCounter(counter)).thenReturn(Result.Success(data = true))
 
             val result = useCase(counter)
 
-            Mockito.verify(mockCounterRepository).decreaseCounter(counter)
+            verify(mockCounterRepository).increaseCounter(counter)
             assertTrue(result is Result.Success)
             assertTrue((result as Result.Success).data)
         }
@@ -50,12 +50,11 @@ class DecreaseCounterUseCaseTest {
         runBlocking {
             val counter = Counter(1,1,"counter")
 
-            Mockito.`when`(mockCounterRepository.decreaseCounter(counter))
-                .thenReturn(Result.Failure(error = CounterError.NETWORK_ERROR))
+            `when`(mockCounterRepository.increaseCounter(counter)).thenReturn(Result.Failure(error = CounterError.NETWORK_ERROR))
 
             val result = useCase(counter)
 
-            Mockito.verify(mockCounterRepository).decreaseCounter(counter)
+            verify(mockCounterRepository).increaseCounter(counter)
             assertTrue(result is Result.Failure)
             assertEquals(CounterError.NETWORK_ERROR, (result as Result.Failure).error)
         }

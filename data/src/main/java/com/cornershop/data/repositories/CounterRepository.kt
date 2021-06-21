@@ -30,8 +30,17 @@ class CounterRepository @Inject constructor(
         return Result.Success(data = true)
     }
 
-    override suspend fun decreaseCounter(counterId: Int): Result<Boolean> {
-        TODO("Not yet implemented")
+    override suspend fun decreaseCounter(counter: Counter): Result<Boolean> {
+        return when(val result = remoteDataSource.decreaseCounter(counter)) {
+            is Result.Success -> {
+                localDataSource.setAll(result.data)
+                Result.Success(data = true)
+            }
+            is Result.Failure -> {
+                Result.Failure(result.error)
+
+            }
+        }
     }
 
     override suspend fun deleteCounter(counterId: Int): Result<Boolean> {
@@ -52,7 +61,15 @@ class CounterRepository @Inject constructor(
         }
     }
 
-    override suspend fun increaseCounter(counterId: Int): Result<Boolean> {
-        TODO("Not yet implemented")
+    override suspend fun increaseCounter(counter: Counter): Result<Boolean> {
+        return when(val result = remoteDataSource.increaseCounter(counter)) {
+            is Result.Success -> {
+                localDataSource.setAll(result.data)
+                Result.Success(data = true)
+            }
+            is Result.Failure -> {
+                Result.Failure(result.error)
+            }
+        }
     }
 }

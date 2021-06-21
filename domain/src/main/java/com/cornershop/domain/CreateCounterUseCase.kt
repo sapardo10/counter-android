@@ -3,6 +3,7 @@ package com.cornershop.domain
 import com.cornershop.data.models.Counter
 import com.cornershop.data.models.Result
 import com.cornershop.data.repositories.CounterRepository
+import com.cornershop.data.repositories.ICounterRepository
 import javax.inject.Inject
 
 /**
@@ -21,8 +22,8 @@ interface ICreateCounterUseCase {
 /**
  * Implementation of [ICreateCounterUseCase]
  */
-class CreateCounterUseCase @Inject constructor(
-        private val counterRepository: CounterRepository
+class CreateCounterUseCase(
+        private val counterRepository: ICounterRepository
 ): ICreateCounterUseCase {
     override suspend operator fun invoke(): Result<Counter> {
         val result = counterRepository.createCounter()

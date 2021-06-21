@@ -1,13 +1,12 @@
 package com.cornershop.counterstest.features.main
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cornershop.counterstest.utils.SingleLiveEvent
 import com.cornershop.data.models.Counter
 import com.cornershop.data.models.CounterError
 import com.cornershop.data.models.Result
-import com.cornershop.domain.GetAllCountersUseCase
+import com.cornershop.domain.IGetAllCountersUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -15,10 +14,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val getAllCountersUseCase: GetAllCountersUseCase
+    private val getAllCountersUseCase: IGetAllCountersUseCase
 ): ViewModel() {
 
-    val counters = MutableLiveData<List<Counter>>()
     val actions = SingleLiveEvent<MainViewModelActions?>()
 
     /**
@@ -33,15 +31,9 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             getAllCountersUseCase().collect { result ->
                 when(result) {
-                    is Result.Success -> result.data.let { data -> counters.postValue(data) }
-                    is Result.Failure -> {
-                        if(result.error == CounterError.NETWORK_ERROR) {
-                            actions.postValue(MainViewModelActions.ShowListCounterNoInternetConnectionDialog)
-                        }
-                    }
-                    else -> {
-                        counters.postValue(listOf())
-                    }
+                    is Result.Success -> onCountersFetchedSuccessfully(result.data)
+                    is Result.Failure -> onCountersFetchedSuccessfully(result.error)
+                    else -> actions.postValue(MainViewModelActions.ShowEmptyState)
                 }
             }
         }
@@ -53,13 +45,37 @@ class MainViewModel @Inject constructor(
     fun onCreateCounterButtonTapped() {
         actions.postValue(MainViewModelActions.GoToCreateScreen)
     }
+
+    /**
+     * -------------------------------------- PRIVATE METHODS --------------------------------------
+     */
+
+    /**
+     * Method called when the fetching of the counters failed
+     * @param error [CounterError] why the fetching failed
+     */
+    private fun onCountersFetchedSuccessfully(error: CounterError) {
+        if(error == CounterError.NETWORK_ERROR) {
+            actions.postValue(MainViewModelActions.ShowListCounterNoInternetConnectionDialog)
+        }
+    }
+
+    /**
+     * Method called when the fetching of the counters was a success
+     * @param list [List] of [Counter] of the application
+     */
+    private fun onCountersFetchedSuccessfully(list: List<Counter>?) {
+        if(list?.isEmpty() == true) {
+            actions.postValue(MainViewModelActions.ShowEmptyState)
+        } else {
+            actions.postValue(MainViewModelActions.ShowListCounter)
+        }
+    }
 }
 
 sealed class MainViewModelActions {
     object GoToCreateScreen: MainViewModelActions()
+    object ShowEmptyState: MainViewModelActions()
+    object ShowListCounter: MainViewModelActions()
     object ShowListCounterNoInternetConnectionDialog: MainViewModelActions()
-    data class ShowUpdateCounterNoInternetConnectionDialog(
-        val counterName: String,
-        val counterAfterUpdate: Int
-    ): MainViewModelActions()
 }
