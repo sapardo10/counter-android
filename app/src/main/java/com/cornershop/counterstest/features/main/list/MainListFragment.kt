@@ -1,6 +1,8 @@
 package com.cornershop.counterstest.features.main.list
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,32 +21,84 @@ class MainListFragment : Fragment() {
     private var _binding: FragmentMainListBinding? = null
     private val binding get() = _binding!!
 
+    /**
+     * ------------------------------------ LIFECYCLE METHODS --------------------------------------
+     */
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMainListBinding.inflate(inflater, container, false)
-        val view = binding.root
         with(binding.list) {
             layoutManager = LinearLayoutManager(context)
             adapter =
                 CounterListRecyclerViewAdapter(deletionMode = viewModel.deletionMode, listOf())
         }
-        return view
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.countersViewModel.observe(viewLifecycleOwner, { list ->
-            list?.let {
-                binding.list.adapter =
-                    CounterListRecyclerViewAdapter(deletionMode = viewModel.deletionMode, it)
-                updateLabels(it)
-            }
-        })
+        initializeObservers()
         viewModel.initializeView()
+        initializeInteractionsListener()
+        binding.swipeRefresh.setColorSchemeResources(R.color.orange)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    /**
+     * -------------------------------------- PRIVATE METHODS --------------------------------------
+     */
+
+    /**
+     * Method that initializes the interactions the view can have
+     */
+    private fun initializeInteractionsListener() {
+        binding.searchEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                ///Do nothing, it does not interest the application so far
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                viewModel.onSearchTextChanged(newText = s.toString())
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                ///Do nothing, it does not interest the application so far
+            }
+        })
+        binding.swipeRefresh.setOnRefreshListener {
+            viewModel.initializeView()
+        }
+    }
+
+    /**
+     * Method that initializes the observers of the view
+     */
+    private fun initializeObservers() {
+        viewModel.countersViewModel.observe(viewLifecycleOwner, { list ->
+            list?.let {
+                binding.swipeRefresh.isRefreshing = false
+                val filteredList = viewModel.filterCountersViewModels(list)
+                binding.list.adapter =
+                    CounterListRecyclerViewAdapter(
+                        deletionMode = viewModel.deletionMode,
+                        filteredList
+                    )
+                updateLabels(filteredList)
+            }
+        })
+    }
+
+    /**
+     * Method that updates the labels of amount of items, and total counter count.
+     * @param list [List] of [CounterViewModel] that will be shown on the screen
+     */
     private fun updateLabels(list: List<CounterViewModel>) {
         with(binding) {
             var count = 0
@@ -52,11 +106,6 @@ class MainListFragment : Fragment() {
             nItemsLabel.text = getString(R.string.n_items, list.size)
             nTimesLabel.text = getString(R.string.n_times, count)
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     companion object {

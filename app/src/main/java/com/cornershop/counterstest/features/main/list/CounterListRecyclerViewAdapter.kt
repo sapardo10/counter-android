@@ -34,8 +34,9 @@ class CounterListRecyclerViewAdapter(
                 nameLabel.text = viewModel.counter.name
                 if (deletionMode) {
                     normalActionsGroup.visibility = View.GONE
-                    selectedIcon.visibility =
-                        if (viewModel.isSelected()) View.VISIBLE else View.GONE
+                    val visibilitySelected = if (viewModel.isSelected()) View.VISIBLE else View.GONE
+                    selectedIcon.visibility = visibilitySelected
+                    itemOverlay.visibility = visibilitySelected
                     root.setOnSingleClickListener {
                         viewModel.onCheckTapped()
                     }
@@ -43,6 +44,7 @@ class CounterListRecyclerViewAdapter(
                 } else {
                     normalActionsGroup.visibility = View.VISIBLE
                     selectedIcon.visibility = View.GONE
+                    itemOverlay.visibility = View.GONE
 
                     minusIcon.setOnSingleClickListener {
                         viewModel.onMinusTapped()

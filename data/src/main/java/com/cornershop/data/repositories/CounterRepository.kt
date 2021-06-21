@@ -4,9 +4,11 @@ import com.cornershop.data.datasources.ICounterLocalDataSource
 import com.cornershop.data.datasources.ICounterRemoteDataSource
 import com.cornershop.data.models.Counter
 import com.cornershop.data.models.Result
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
 import javax.inject.Inject
 
 /**
@@ -48,6 +50,7 @@ class CounterRepository @Inject constructor(
         TODO("Not yet implemented")
     }
 
+    @FlowPreview
     override suspend fun getAll(): Flow<Result<List<Counter>>> {
         return when (val remoteResponse = remoteDataSource.getAll()) {
             is Result.Success<List<Counter>> -> {
@@ -55,9 +58,13 @@ class CounterRepository @Inject constructor(
                 return localDataSource.getAll().map { list -> Result.Success(data = list) }
             }
             is Result.Failure<*> -> {
-                flow<Result<List<Counter>>> {
-                    emit(remoteResponse)
-                }
+                merge(
+                    flow<Result<List<Counter>>> {
+                        emit(remoteResponse)
+                    },
+                    localDataSource.getAll().map { list -> Result.Success(data = list) }
+                )
+
             }
         }
     }

@@ -56,4 +56,5 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="decrease_counter">Icon that decrements the counter in one</string>
     <string name="increase_counter">Icon that increases the counter by one</string>
+    <string name="ic_description_selected_item">Icon that represents the item has been selected by the user</string>
 </resources>

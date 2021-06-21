@@ -25,11 +25,24 @@ class MainListViewModel @Inject constructor(
     var deletionMode = false
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    var searchText: String = ""
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     val selectedCounters = mutableListOf<Counter>()
 
     /**
      * -------------------------------------- PUBLIC METHODS ---------------------------------------
      */
+
+    /**
+     * Method that filters the [List] of [CounterViewModel] given the current parameters
+     * @param viewModels [List] of [CounterViewModel] to be filtered
+     * @return [List] of [CounterViewModel] after being filtered
+     */
+    fun filterCountersViewModels(viewModels: List<CounterViewModel>): List<CounterViewModel> {
+        return viewModels
+            .filter { it.counter.name.contains(searchText, ignoreCase = true) }
+    }
 
     /**
      * Method that initializes the logic when the view is loaded
@@ -42,6 +55,7 @@ class MainListViewModel @Inject constructor(
                     is Result.Success -> {
                         result.data
                             .map { mapCounterToCounterViewModel(it) }
+                            .filter { it.counter.name.contains(searchText, ignoreCase = true) }
                             .let { data -> countersViewModel.postValue(data) }
                     }
                     else -> {
@@ -53,8 +67,30 @@ class MainListViewModel @Inject constructor(
     }
 
     /**
+     * Method called when the user changes the text on the search field
+     * @param newText [String] representing the new search text entered by the user, if empty
+     * it will disappear the search filter
+     */
+    fun onSearchTextChanged(newText: String) {
+        searchText = newText
+        countersViewModel.postValue(
+            countersViewModel.value
+        )
+    }
+
+    /**
      * ------------------------------------- PRIVATE METHODS ---------------------------------------
      */
+
+    /**
+     * Method that tells if an item has been already selected or not
+     * @param counter [Counter] that wants to be checked
+     * @return [Boolean] true if the item has been selected, false otherwise
+     */
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun isItemSelected(counter: Counter): Boolean {
+        return selectedCounters.contains(counter)
+    }
 
     /**
      * Method that transforms a [Counter] into a [CounterViewModel]
@@ -102,16 +138,6 @@ class MainListViewModel @Inject constructor(
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun onItemPlusTap(counter: Counter) {
         viewModelScope.launch { increaseCounterUseCase(counterToIncrement = counter) }
-    }
-
-    /**
-     * Method that tells if an item has been already selected or not
-     * @param counter [Counter] that wants to be checked
-     * @return [Boolean] true if the item has been selected, false otherwise
-     */
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    fun isItemSelected(counter: Counter): Boolean {
-        return selectedCounters.contains(counter)
     }
 
     /**

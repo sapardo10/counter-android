@@ -4,35 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/search_edit_text"
-        style="@style/Theme.SearchField"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:background="@drawable/rounded_corners"
-        android:elevation="2dp"
-        android:hint="@string/search_counters"
-        android:importantForAutofill="no"
-        android:inputType="text"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <View
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:alpha="0.6"
-        android:background="@drawable/rounded_corners"
-        android:elevation="2dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/search_edit_text"
-        app:layout_constraintEnd_toEndOf="@id/search_edit_text"
-        app:layout_constraintStart_toStartOf="@id/search_edit_text"
-        app:layout_constraintTop_toTopOf="@id/search_edit_text" />
-
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_container_view"
         android:layout_width="match_parent"
@@ -40,7 +11,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_edit_text" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/add_new_counter_button"
