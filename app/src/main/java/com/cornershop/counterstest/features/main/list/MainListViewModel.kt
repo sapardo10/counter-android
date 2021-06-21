@@ -6,7 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cornershop.data.models.Counter
 import com.cornershop.data.models.Result
-import com.cornershop.domain.*
+import com.cornershop.domain.IDecreaseCounterUseCase
+import com.cornershop.domain.IGetAllCountersUseCase
+import com.cornershop.domain.IIncreaseCounterUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -17,10 +19,11 @@ class MainListViewModel @Inject constructor(
     private val decreaseCounterUseCase: IDecreaseCounterUseCase,
     private val getAllCountersUseCase: IGetAllCountersUseCase,
     private val increaseCounterUseCase: IIncreaseCounterUseCase,
-): ViewModel() {
+) : ViewModel() {
 
     val countersViewModel = MutableLiveData<List<CounterViewModel>>()
     var deletionMode = false
+
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     val selectedCounters = mutableListOf<Counter>()
 
@@ -118,7 +121,7 @@ class MainListViewModel @Inject constructor(
      */
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun onItemSelectionTapped(counter: Counter) {
-        if(selectedCounters.contains(counter)) {
+        if (selectedCounters.contains(counter)) {
             selectedCounters.remove(counter)
         } else {
             selectedCounters.add(counter)

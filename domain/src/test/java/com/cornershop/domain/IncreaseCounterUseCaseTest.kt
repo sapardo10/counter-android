@@ -33,7 +33,7 @@ class IncreaseCounterUseCaseTest {
     @Test
     fun `Invoke - response is success`() {
         runBlocking {
-            val counter = Counter(1,1,"counter")
+            val counter = Counter(1, 1, "counter")
 
             `when`(mockCounterRepository.increaseCounter(counter)).thenReturn(Result.Success(data = true))
 
@@ -48,7 +48,7 @@ class IncreaseCounterUseCaseTest {
     @Test
     fun `Invoke - response is failure`() {
         runBlocking {
-            val counter = Counter(1,1,"counter")
+            val counter = Counter(1, 1, "counter")
 
             `when`(mockCounterRepository.increaseCounter(counter)).thenReturn(Result.Failure(error = CounterError.NETWORK_ERROR))
 

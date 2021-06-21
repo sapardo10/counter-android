@@ -1,9 +1,9 @@
 package com.cornershop.counterstest.features.main.list
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.cornershop.counterstest.databinding.FragmentCounterItemBinding
 import com.cornershop.counterstest.utils.setOnSingleClickListener
 
@@ -13,7 +13,8 @@ class CounterListRecyclerViewAdapter(
 ) : RecyclerView.Adapter<CounterListRecyclerViewAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val itemBinding = FragmentCounterItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val itemBinding =
+            FragmentCounterItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(itemBinding)
     }
 
@@ -24,15 +25,17 @@ class CounterListRecyclerViewAdapter(
 
     override fun getItemCount(): Int = values.size
 
-    inner class ViewHolder(private val binding: FragmentCounterItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(private val binding: FragmentCounterItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(viewModel: CounterViewModel){
+        fun bind(viewModel: CounterViewModel) {
             with(binding) {
                 countText.text = viewModel.counter.count.toString()
                 nameLabel.text = viewModel.counter.name
-                if(deletionMode) {
+                if (deletionMode) {
                     normalActionsGroup.visibility = View.GONE
-                    selectedIcon.visibility = if(viewModel.isSelected()) View.VISIBLE else View.GONE
+                    selectedIcon.visibility =
+                        if (viewModel.isSelected()) View.VISIBLE else View.GONE
                     root.setOnSingleClickListener {
                         viewModel.onCheckTapped()
                     }
@@ -58,9 +61,7 @@ class CounterListRecyclerViewAdapter(
                 }
 
 
-                normalActionsGroup.visibility = if(deletionMode) View.GONE else View.VISIBLE
-
-
+                normalActionsGroup.visibility = if (deletionMode) View.GONE else View.VISIBLE
 
 
             }

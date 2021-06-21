@@ -1,7 +1,6 @@
 package com.cornershop.counterstest.network.apis
 
 import com.cornershop.counterstest.network.dtos.CounterDTO
-import okhttp3.RequestBody
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST

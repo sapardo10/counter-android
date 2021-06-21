@@ -5,7 +5,7 @@ import com.cornershop.data.datasources.ICounterRemoteDataSource
 import com.cornershop.data.models.Counter
 import com.cornershop.data.models.CounterError
 import com.cornershop.data.models.Result
-import kotlinx.coroutines.*
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -23,8 +23,10 @@ class CounterRepositoryTest {
     /**
      * Mocks
      */
-    private val mockLocalDataSource: ICounterLocalDataSource = mock(ICounterLocalDataSource::class.java)
-    private val mockRemoteDataSource: ICounterRemoteDataSource = mock(ICounterRemoteDataSource::class.java)
+    private val mockLocalDataSource: ICounterLocalDataSource =
+        mock(ICounterLocalDataSource::class.java)
+    private val mockRemoteDataSource: ICounterRemoteDataSource =
+        mock(ICounterRemoteDataSource::class.java)
 
     @BeforeEach
     fun setUp() {

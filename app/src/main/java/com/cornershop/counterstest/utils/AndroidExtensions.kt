@@ -23,8 +23,8 @@ fun View.setOnSingleClickListener(clickListener: ((View) -> Unit)?) {
  * such action. If it's greater it will execute [clickListener]
  */
 class OnSingleClickListener(
-        private val clickListener: (View) -> Unit,
-        private val intervalMs: Long = 1000
+    private val clickListener: (View) -> Unit,
+    private val intervalMs: Long = 1000
 ) : View.OnClickListener {
 
     //Atomic boolean used in case the operations happens on different threads.
@@ -42,7 +42,11 @@ class OnSingleClickListener(
     }
 }
 
-fun <T> RecyclerView.Adapter<*>.autoNotify(oldList: List<T>, newList: List<T>, compare: (T, T) -> Boolean) {
+fun <T> RecyclerView.Adapter<*>.autoNotify(
+    oldList: List<T>,
+    newList: List<T>,
+    compare: (T, T) -> Boolean
+) {
     val diff = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
 
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {

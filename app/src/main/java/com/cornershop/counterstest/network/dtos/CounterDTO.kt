@@ -2,7 +2,7 @@ package com.cornershop.counterstest.network.dtos
 
 import com.google.gson.annotations.SerializedName
 
-data class CounterDTO (
+data class CounterDTO(
     @SerializedName("count")
     val count: Int,
     @SerializedName("id")

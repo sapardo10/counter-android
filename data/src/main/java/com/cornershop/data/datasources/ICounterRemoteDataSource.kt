@@ -2,7 +2,6 @@ package com.cornershop.data.datasources
 
 import com.cornershop.data.models.Counter
 import com.cornershop.data.models.Result
-import com.sun.org.apache.xpath.internal.operations.Bool
 
 /**
  * Interface that will hold the contract for the data source in charge of all transactions related

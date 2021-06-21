@@ -1,14 +1,15 @@
 package com.cornershop.counterstest.features.welcome
 
-import androidx.lifecycle.*
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.cornershop.counterstest.session.IUserPreferencesHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class WelcomeViewModel @Inject constructor(
-        private val userPreferencesHelper: IUserPreferencesHelper
-): ViewModel() {
+    private val userPreferencesHelper: IUserPreferencesHelper
+) : ViewModel() {
 
     val actions = MutableLiveData<WelcomeViewModelActions>()
 
@@ -22,7 +23,7 @@ class WelcomeViewModel @Inject constructor(
      */
     fun initializeView() {
         val userHasSeenWelcomeScreenBefore = userPreferencesHelper.hasUserSeenWelcomeScreenBefore()
-        if(userHasSeenWelcomeScreenBefore) {
+        if (userHasSeenWelcomeScreenBefore) {
             actions.postValue(WelcomeViewModelActions.GO_TO_MAIN_SCREEN)
         }
     }

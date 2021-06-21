@@ -28,13 +28,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/ic_minus_color_primary"
+        android:contentDescription="@string/decrease_counter"
         app:layout_constraintBottom_toBottomOf="@id/name_label"
         app:layout_constraintEnd_toStartOf="@+id/count_text"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toEndOf="@+id/name_label"
-        app:layout_constraintTop_toTopOf="@id/name_label"
-        android:contentDescription="@string/decrease_counter" />
+        app:layout_constraintTop_toTopOf="@id/name_label" />
 
     <TextView
         android:id="@+id/count_text"
@@ -54,22 +54,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/ic_plus_color_primary"
+        android:contentDescription="@string/increase_counter"
         app:layout_constraintBottom_toBottomOf="@id/name_label"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/count_text"
-        app:layout_constraintTop_toTopOf="@id/name_label"
-        android:contentDescription="@string/increase_counter" />
+        app:layout_constraintTop_toTopOf="@id/name_label" />
 
     <ImageButton
-        android:visibility="gone"
-        app:layout_constraintTop_toTopOf="@id/name_label"
-        app:layout_constraintBottom_toBottomOf="@id/name_label"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/name_label"
-        app:layout_constraintHorizontal_bias="1.0"
-        android:background="@drawable/ic_check"
         android:id="@+id/selected_icon"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_check"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/name_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@id/name_label"
+        app:layout_constraintTop_toTopOf="@id/name_label" />
 </androidx.constraintlayout.widget.ConstraintLayout>

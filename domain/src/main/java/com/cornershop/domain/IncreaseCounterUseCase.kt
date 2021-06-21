@@ -22,8 +22,8 @@ interface IIncreaseCounterUseCase {
  * Implementation of [IIncreaseCounterUseCase]
  */
 class IncreaseCounterUseCase(
-        private val counterRepository: ICounterRepository
-): IIncreaseCounterUseCase {
+    private val counterRepository: ICounterRepository
+) : IIncreaseCounterUseCase {
 
     /**
      * -------------------------------------- PUBLIC METHODS ---------------------------------------

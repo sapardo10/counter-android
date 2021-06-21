@@ -21,8 +21,8 @@ interface IGetAllCountersUseCase {
  * Implementation of [IGetAllCountersUseCase]
  */
 class GetAllCountersUseCase(
-        private val counterRepository: ICounterRepository
-): IGetAllCountersUseCase {
+    private val counterRepository: ICounterRepository
+) : IGetAllCountersUseCase {
     override suspend operator fun invoke(): Flow<Result<List<Counter>>> {
         return counterRepository.getAll()
     }

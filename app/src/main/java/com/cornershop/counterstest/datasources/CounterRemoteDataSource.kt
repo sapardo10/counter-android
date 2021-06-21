@@ -8,15 +8,13 @@ import com.cornershop.data.models.Result
 import com.cornershop.data.models.Result.Success
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.lang.Exception
-import javax.inject.Inject
 
 /**
  * Implementation of [ICounterRemoteDataSource]
  */
 class CounterRemoteDataSource constructor(
     private val counterApi: CounterApi
-): ICounterRemoteDataSource {
+) : ICounterRemoteDataSource {
 
     /**
      * -------------------------------------- PUBLIC METHODS ---------------------------------------
@@ -25,7 +23,8 @@ class CounterRemoteDataSource constructor(
     override suspend fun decreaseCounter(counter: Counter): Result<List<Counter>> {
         return withContext(Dispatchers.IO) {
             try {
-                val counters = counterApi.decrementCounter(counter.toCounterDTO()).map { it.toCounter() }
+                val counters =
+                    counterApi.decrementCounter(counter.toCounterDTO()).map { it.toCounter() }
                 Success(
                     data = counters
                 )
@@ -40,11 +39,13 @@ class CounterRemoteDataSource constructor(
     override suspend fun getAll(): Result<List<Counter>> {
         return withContext(Dispatchers.IO) {
             try {
-                val counters = counterApi.getCounters().map { dto -> Counter(
-                    count = dto.count,
-                    id = dto.id,
-                    name = dto.title
-                ) }
+                val counters = counterApi.getCounters().map { dto ->
+                    Counter(
+                        count = dto.count,
+                        id = dto.id,
+                        name = dto.title
+                    )
+                }
                 Success(
                     data = counters
                 )
@@ -59,7 +60,8 @@ class CounterRemoteDataSource constructor(
     override suspend fun increaseCounter(counter: Counter): Result<List<Counter>> {
         return withContext(Dispatchers.IO) {
             try {
-                val counters = counterApi.decrementCounter(counter.toCounterDTO()).map { it.toCounter() }
+                val counters =
+                    counterApi.incrementCounter(counter.toCounterDTO()).map { it.toCounter() }
                 Success(
                     data = counters
                 )

@@ -17,10 +17,10 @@ import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.After
-import org.junit.Before
-import org.junit.Test
 import org.junit.Assert.*
+import org.junit.Before
 import org.junit.Rule
+import org.junit.Test
 import org.junit.rules.TestRule
 import org.mockito.Mockito.*
 
@@ -44,7 +44,8 @@ class MainListViewModelTest {
     /**
      * Mocks
      */
-    private var mockCountersObserver: Observer<List<CounterViewModel>> = mock(Observer::class.java) as Observer<List<CounterViewModel>>
+    private var mockCountersObserver: Observer<List<CounterViewModel>> =
+        mock(Observer::class.java) as Observer<List<CounterViewModel>>
     private val mockDecreaseCounterUseCase = mock(IDecreaseCounterUseCase::class.java)
     private val mockGetAllCountersUseCase = mock(IGetAllCountersUseCase::class.java)
     private val mockIncreaseCounterUseCase = mock(IIncreaseCounterUseCase::class.java)

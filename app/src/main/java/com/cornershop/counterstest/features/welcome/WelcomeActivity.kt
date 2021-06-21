@@ -5,8 +5,8 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import com.cornershop.counterstest.core.BaseActivity
 import com.cornershop.counterstest.databinding.ActivityWelcomeBinding
-import com.cornershop.counterstest.utils.setOnSingleClickListener
 import com.cornershop.counterstest.features.main.MainActivity
+import com.cornershop.counterstest.utils.setOnSingleClickListener
 import dagger.hilt.android.AndroidEntryPoint
 
 

@@ -6,10 +6,10 @@ import com.cornershop.data.models.Result
 import com.cornershop.data.repositories.ICounterRepository
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
 import org.mockito.Mockito
 
 class DecreaseCounterUseCaseTest {
@@ -33,9 +33,10 @@ class DecreaseCounterUseCaseTest {
     @Test
     fun `Invoke - response is success`() {
         runBlocking {
-            val counter = Counter(1,1,"counter")
+            val counter = Counter(1, 1, "counter")
 
-            Mockito.`when`(mockCounterRepository.decreaseCounter(counter)).thenReturn(Result.Success(data = true))
+            Mockito.`when`(mockCounterRepository.decreaseCounter(counter))
+                .thenReturn(Result.Success(data = true))
 
             val result = useCase(counter)
 
@@ -48,7 +49,7 @@ class DecreaseCounterUseCaseTest {
     @Test
     fun `Invoke - response is failure`() {
         runBlocking {
-            val counter = Counter(1,1,"counter")
+            val counter = Counter(1, 1, "counter")
 
             Mockito.`when`(mockCounterRepository.decreaseCounter(counter))
                 .thenReturn(Result.Failure(error = CounterError.NETWORK_ERROR))

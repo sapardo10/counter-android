@@ -5,7 +5,6 @@ import androidx.annotation.MainThread
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import com.cornershop.counterstest.features.main.MainViewModelActions
 import java.util.concurrent.atomic.AtomicBoolean
 
 class SingleLiveEvent<T> : MutableLiveData<T>() {
@@ -51,4 +50,4 @@ class SingleLiveEvent<T> : MutableLiveData<T>() {
     }
 }
 
-interface SingleLiveEventObserver<SingleLiveEvent>: Observer<SingleLiveEvent>
+interface SingleLiveEventObserver<SingleLiveEvent> : Observer<SingleLiveEvent>

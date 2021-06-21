@@ -15,7 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val getAllCountersUseCase: IGetAllCountersUseCase
-): ViewModel() {
+) : ViewModel() {
 
     val actions = SingleLiveEvent<MainViewModelActions?>()
 
@@ -30,7 +30,7 @@ class MainViewModel @Inject constructor(
     fun initializeView() {
         viewModelScope.launch {
             getAllCountersUseCase().collect { result ->
-                when(result) {
+                when (result) {
                     is Result.Success -> onCountersFetchedSuccessfully(result.data)
                     is Result.Failure -> onCountersFetchedSuccessfully(result.error)
                     else -> actions.postValue(MainViewModelActions.ShowEmptyState)
@@ -55,7 +55,7 @@ class MainViewModel @Inject constructor(
      * @param error [CounterError] why the fetching failed
      */
     private fun onCountersFetchedSuccessfully(error: CounterError) {
-        if(error == CounterError.NETWORK_ERROR) {
+        if (error == CounterError.NETWORK_ERROR) {
             actions.postValue(MainViewModelActions.ShowListCounterNoInternetConnectionDialog)
         }
     }
@@ -65,7 +65,7 @@ class MainViewModel @Inject constructor(
      * @param list [List] of [Counter] of the application
      */
     private fun onCountersFetchedSuccessfully(list: List<Counter>?) {
-        if(list?.isEmpty() == true) {
+        if (list?.isEmpty() == true) {
             actions.postValue(MainViewModelActions.ShowEmptyState)
         } else {
             actions.postValue(MainViewModelActions.ShowListCounter)
@@ -74,8 +74,8 @@ class MainViewModel @Inject constructor(
 }
 
 sealed class MainViewModelActions {
-    object GoToCreateScreen: MainViewModelActions()
-    object ShowEmptyState: MainViewModelActions()
-    object ShowListCounter: MainViewModelActions()
-    object ShowListCounterNoInternetConnectionDialog: MainViewModelActions()
+    object GoToCreateScreen : MainViewModelActions()
+    object ShowEmptyState : MainViewModelActions()
+    object ShowListCounter : MainViewModelActions()
+    object ShowListCounterNoInternetConnectionDialog : MainViewModelActions()
 }

@@ -16,9 +16,8 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
-import org.junit.Test
-
 import org.junit.Rule
+import org.junit.Test
 import org.junit.rules.TestRule
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
@@ -44,7 +43,8 @@ class MainViewModelTest {
     /**
      * Mocks
      */
-    private var mockActionsObserver: SingleLiveEventObserver<MainViewModelActions?> = Mockito.mock(SingleLiveEventObserver::class.java) as SingleLiveEventObserver<MainViewModelActions?>
+    private var mockActionsObserver: SingleLiveEventObserver<MainViewModelActions?> =
+        Mockito.mock(SingleLiveEventObserver::class.java) as SingleLiveEventObserver<MainViewModelActions?>
     private val mockGetAllCountersUseCase = Mockito.mock(IGetAllCountersUseCase::class.java)
 
     @ExperimentalCoroutinesApi
@@ -71,7 +71,7 @@ class MainViewModelTest {
     @Test
     fun `Initialize view - fetch counter success with non-empty list`() {
         runBlocking {
-            val counter = Counter(1,1,"counter")
+            val counter = Counter(1, 1, "counter")
 
             `when`(mockGetAllCountersUseCase.invoke()).thenReturn(flow {
                 emit(Result.Success(data = listOf(counter)))
