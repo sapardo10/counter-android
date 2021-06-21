@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -15,6 +16,7 @@ import com.cornershop.counterstest.features.main.list.MainListViewModelActions.S
 import com.cornershop.counterstest.features.main.list.MainListViewModelActions.SHOW_NORMAL_LIST
 import com.cornershop.counterstest.utils.setOnSingleClickListener
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class MainListFragment : Fragment() {
@@ -47,6 +49,7 @@ class MainListFragment : Fragment() {
         viewModel.initializeView()
         initializeInteractionsListener()
         binding.swipeRefresh.setColorSchemeResources(R.color.orange)
+        initializeToolbar()
     }
 
     override fun onDestroyView() {
@@ -113,6 +116,14 @@ class MainListFragment : Fragment() {
                 }
             }
         })
+    }
+
+    /**
+     * Method that initiliazes the toolbar of the delete mode
+     */
+    private fun initializeToolbar() {
+        binding.toolbar.inflateMenu(R.menu.toolbar_delete_mode)
+        val menu: Menu = binding.toolbar.menu
     }
 
     /**
