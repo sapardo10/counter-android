@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -23,16 +22,16 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <View
-        android:elevation="2dp"
-        android:visibility="gone"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:alpha="0.6"
         android:background="@drawable/rounded_corners"
-        app:layout_constraintTop_toTopOf="@id/search_edit_text"
+        android:elevation="2dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/search_edit_text"
-        app:layout_constraintStart_toStartOf="@id/search_edit_text"
         app:layout_constraintEnd_toEndOf="@id/search_edit_text"
-        android:layout_width="0dp"
-        android:layout_height="0dp"/>
+        app:layout_constraintStart_toStartOf="@id/search_edit_text"
+        app:layout_constraintTop_toTopOf="@id/search_edit_text" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_container_view"
@@ -44,18 +43,18 @@
         app:layout_constraintTop_toBottomOf="@+id/search_edit_text" />
 
     <Button
-        style="@style/Theme.ButtonTheme"
-        android:drawableStart="@drawable/ic_plus"
         android:id="@+id/add_new_counter_button"
+        style="@style/Theme.ButtonTheme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAllCaps="true"
-        android:text="@string/add_counters"
         android:background="@drawable/rounded_corners_primary"
-        app:layout_constraintVertical_bias="0.95"
+        android:drawableStart="@drawable/ic_plus"
+        android:text="@string/add_counters"
+        android:textAllCaps="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.95" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
