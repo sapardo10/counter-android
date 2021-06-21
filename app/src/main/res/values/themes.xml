@@ -41,6 +41,16 @@
         <item name="backgroundTint">?attr/colorPrimary</item>
     </style>
 
+    <style name="Theme.FlatButtonTheme" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:drawablePadding">8dp</item>
+        <item name="android:paddingBottom">18dp</item>
+        <item name="android:paddingEnd">20dp</item>
+        <item name="android:paddingStart">20dp</item>
+        <item name="android:paddingTop">18dp</item>
+        <item name="android:radius">18dp</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+    </style>
+
     <style name="Theme.ProgressLoaderTheme" parent="Theme.CountersNormal">
         <item name="android:indeterminateTint">?attr/colorPrimary</item>
     </style>

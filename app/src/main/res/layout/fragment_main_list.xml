@@ -34,6 +34,12 @@
         app:layout_constraintStart_toStartOf="@id/search_edit_text"
         app:layout_constraintTop_toTopOf="@id/search_edit_text" />
 
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/normal_list_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="swipe_refresh,n_times_label,n_items_label" />
+
     <TextView
         android:id="@+id/n_items_label"
         style="@style/Theme.Text.SmallBold"
@@ -64,7 +70,6 @@
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh"
-
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -88,6 +93,49 @@
             tools:context=".features.main.list.MainListFragment"
             tools:listitem="@layout/fragment_counter_item" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/fail_internet_connection_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="empty_state_description_label,empty_state_title_label" />
+
+    <TextView
+        android:id="@+id/empty_state_title_label"
+        style="@style/TextAppearance.AppCompat.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/error_load_counters_title"
+        app:layout_constraintBottom_toTopOf="@+id/empty_state_description_label"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+        android:id="@+id/empty_state_description_label"
+        style="@style/TextAppearance.AppCompat.Medium"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/connection_error_description"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/empty_state_title_label" />
+
+    <Button
+        android:id="@+id/retry_button"
+        style="@style/Theme.FlatButtonTheme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/retry"
+        app:layout_constraintEnd_toEndOf="@+id/empty_state_title_label"
+        app:layout_constraintStart_toStartOf="@+id/empty_state_title_label"
+        app:layout_constraintTop_toBottomOf="@+id/empty_state_description_label" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -21,6 +21,7 @@ class MainListViewModel @Inject constructor(
     private val increaseCounterUseCase: IIncreaseCounterUseCase,
 ) : ViewModel() {
 
+    val actions = MutableLiveData<MainListViewModelActions>()
     val countersViewModel = MutableLiveData<List<CounterViewModel>>()
     var deletionMode = false
 
@@ -49,6 +50,8 @@ class MainListViewModel @Inject constructor(
      * 1. Starts listening to the list of counters for the user to show them on the list.
      */
     fun initializeView() {
+        actions.postValue(MainListViewModelActions.SHOW_NORMAL_LIST)
+        countersViewModel.postValue(listOf())
         viewModelScope.launch {
             getAllCountersUseCase().collect { result ->
                 when (result) {
@@ -59,6 +62,11 @@ class MainListViewModel @Inject constructor(
                             .let { data -> countersViewModel.postValue(data) }
                     }
                     else -> {
+                        if (countersViewModel.value?.isEmpty() == true) {
+                            actions.postValue(MainListViewModelActions.SHOW_NETWORK_ERROR)
+                        } else {
+                            actions.postValue(MainListViewModelActions.SHOW_NORMAL_LIST)
+                        }
                         countersViewModel.postValue(listOf())
                     }
                 }
@@ -159,4 +167,9 @@ class MainListViewModel @Inject constructor(
             countersViewModel.value
         )
     }
+}
+
+enum class MainListViewModelActions {
+    SHOW_NORMAL_LIST,
+    SHOW_NETWORK_ERROR
 }

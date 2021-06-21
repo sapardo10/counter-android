@@ -11,6 +11,9 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cornershop.counterstest.R
 import com.cornershop.counterstest.databinding.FragmentMainListBinding
+import com.cornershop.counterstest.features.main.list.MainListViewModelActions.SHOW_NETWORK_ERROR
+import com.cornershop.counterstest.features.main.list.MainListViewModelActions.SHOW_NORMAL_LIST
+import com.cornershop.counterstest.utils.setOnSingleClickListener
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -75,6 +78,9 @@ class MainListFragment : Fragment() {
         binding.swipeRefresh.setOnRefreshListener {
             viewModel.initializeView()
         }
+        binding.retryButton.setOnSingleClickListener {
+            viewModel.initializeView()
+        }
     }
 
     /**
@@ -91,6 +97,20 @@ class MainListFragment : Fragment() {
                         filteredList
                     )
                 updateLabels(filteredList)
+            }
+        })
+        viewModel.actions.observe(viewLifecycleOwner, {
+            it?.let { action ->
+                when (action) {
+                    SHOW_NORMAL_LIST -> {
+                        binding.failInternetConnectionGroup.visibility = View.GONE
+                        binding.normalListGroup.visibility = View.VISIBLE
+                    }
+                    SHOW_NETWORK_ERROR -> {
+                        binding.normalListGroup.visibility = View.GONE
+                        binding.failInternetConnectionGroup.visibility = View.VISIBLE
+                    }
+                }
             }
         })
     }
