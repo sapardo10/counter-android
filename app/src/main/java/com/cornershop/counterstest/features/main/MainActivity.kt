@@ -81,6 +81,7 @@ class MainActivity : BaseActivity() {
     private fun navigateToCreateScreen() {
         val intent = Intent(this, CreateActivity::class.java)
         startActivity(intent)
+        overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up)
     }
 
     /**

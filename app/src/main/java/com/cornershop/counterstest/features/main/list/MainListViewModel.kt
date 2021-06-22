@@ -27,7 +27,7 @@ class MainListViewModel @Inject constructor(
 
     val actions = MutableLiveData<MainListViewModelActions>()
     val countersViewModel = MutableLiveData<List<CounterViewModel>>()
-    var deletionMode = MutableLiveData<Boolean>(true)
+    var deletionMode = MutableLiveData<Boolean>(false)
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     var searchText: String = ""

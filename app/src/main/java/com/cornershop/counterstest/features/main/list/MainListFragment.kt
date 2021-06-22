@@ -172,10 +172,11 @@ class MainListFragment : Fragment() {
         with(binding) {
             var count = 0
             for (viewModel in list) count += viewModel.counter.count
-            nItemsLabel.text = resources.getQuantityString(R.plurals.n_items, list.size)
+            nItemsLabel.text = resources.getQuantityString(R.plurals.n_items, list.size, list.size)
             nTimesLabel.text = resources.getQuantityString(R.plurals.n_times, count)
             binding.toolbar.title = resources.getQuantityString(
                 R.plurals.n_selected,
+                viewModel.selectedCounters.size,
                 viewModel.selectedCounters.size
             )
         }
