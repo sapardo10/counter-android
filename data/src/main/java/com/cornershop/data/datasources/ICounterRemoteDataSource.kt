@@ -18,6 +18,14 @@ interface ICounterRemoteDataSource {
     suspend fun decreaseCounter(counter: Counter): Result<List<Counter>>
 
     /**
+     * Method that calls the remote service to delete a counter
+     * @param counter [Counter] to be deleted
+     * @return [Result.Success] if the operation was completed successfully, [Result.Failure] with
+     * the failure reason otherwise
+     */
+    suspend fun deleteCounter(counter: Counter): Result<List<Counter>>
+
+    /**
      * Method that calls the remote service to get all the counters
      * @return [Result.Success] if the operation was completed successfully with the list inside,
      * [Result.Failure] with the failure reason otherwise

@@ -11,16 +11,24 @@ import kotlinx.coroutines.withContext
 
 class CounterLocalDataSource(
     private val counterDAO: CounterDAO
-): ICounterLocalDataSource {
+) : ICounterLocalDataSource {
+
+    override suspend fun delete(counter: Counter) {
+        withContext(Dispatchers.IO) {
+            counterDAO.delete(counter.toCounterEntity())
+        }
+    }
 
     override suspend fun getAll(): Flow<List<Counter>> {
         return withContext(Dispatchers.IO) {
             counterDAO.getAll().map { entityList ->
-                entityList.map { entity -> Counter(
-                    count = entity.count,
-                    id = entity.id,
-                    name = entity.title
-                ) }
+                entityList.map { entity ->
+                    Counter(
+                        count = entity.count,
+                        id = entity.id,
+                        name = entity.title
+                    )
+                }
             }
         }
     }
@@ -28,11 +36,13 @@ class CounterLocalDataSource(
     override suspend fun setAll(counters: List<Counter>) {
         withContext(Dispatchers.IO) {
             counterDAO.setAll(
-                counters = counters.map { model -> CounterEntity(
-                    id = model.id,
-                    count = model.count,
-                    title = model.name
-                ) }
+                counters = counters.map { model ->
+                    CounterEntity(
+                        id = model.id,
+                        count = model.count,
+                        title = model.name
+                    )
+                }
             )
         }
     }

@@ -36,6 +36,21 @@ class CounterRemoteDataSource constructor(
         }
     }
 
+    override suspend fun deleteCounter(counter: Counter): Result<List<Counter>> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val counters = counterApi.deleteCounter(counter.toCounterDTO()).map { it.toCounter() }
+                Success(
+                    data = counters
+                )
+            } catch (e: Exception) {
+                Result.Failure(
+                    error = CounterError.NETWORK_ERROR
+                )
+            }
+        }
+    }
+
     override suspend fun getAll(): Result<List<Counter>> {
         return withContext(Dispatchers.IO) {
             try {

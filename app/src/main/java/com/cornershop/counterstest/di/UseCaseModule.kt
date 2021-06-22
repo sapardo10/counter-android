@@ -30,6 +30,15 @@ object UseCaseModule {
     }
 
     @Provides
+    fun provideDeleteCounterUseCase(
+        counterRepository: ICounterRepository
+    ): IDeleteCounterUseCase {
+        return DeleteCounterUseCase(
+            counterRepository = counterRepository
+        )
+    }
+
+    @Provides
     fun provideGetAllCountersUseCase(
         counterRepository: ICounterRepository
     ): IGetAllCountersUseCase {

@@ -26,10 +26,10 @@ interface ICounterRepository {
 
     /**
      * Method that deletes a counter
-     * @param counterId [Int] representing the id of the counter that should be deleted
+     * @param counter [Counter] representing the counter that should be deleted
      * @return If success, a [Boolean]. If failure, a [CounterError]
      */
-    suspend fun deleteCounter(counterId: Int): Result<Boolean>
+    suspend fun deleteCounter(counter: Counter): Result<Boolean>
 
     /**
      * Method that returns all the counters available for the user

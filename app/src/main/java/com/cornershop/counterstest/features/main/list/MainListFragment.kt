@@ -1,5 +1,6 @@
 package com.cornershop.counterstest.features.main.list
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -9,11 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cornershop.counterstest.R
 import com.cornershop.counterstest.databinding.FragmentMainListBinding
-import com.cornershop.counterstest.features.main.list.MainListViewModelActions.SHOW_NETWORK_ERROR
-import com.cornershop.counterstest.features.main.list.MainListViewModelActions.SHOW_NORMAL_LIST
 import com.cornershop.counterstest.utils.setOnSingleClickListener
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -38,7 +38,10 @@ class MainListFragment : Fragment() {
         with(binding.list) {
             layoutManager = LinearLayoutManager(context)
             adapter =
-                CounterListRecyclerViewAdapter(deletionMode = viewModel.deletionMode, listOf())
+                CounterListRecyclerViewAdapter(
+                    deletionMode = viewModel.deletionMode.value == true,
+                    listOf()
+                )
         }
         return binding.root
     }
@@ -92,38 +95,76 @@ class MainListFragment : Fragment() {
     private fun initializeObservers() {
         viewModel.countersViewModel.observe(viewLifecycleOwner, { list ->
             list?.let {
-                binding.swipeRefresh.isRefreshing = false
-                val filteredList = viewModel.filterCountersViewModels(list)
-                binding.list.adapter =
-                    CounterListRecyclerViewAdapter(
-                        deletionMode = viewModel.deletionMode,
-                        filteredList
+                with(binding) {
+                    swipeRefresh.isRefreshing = false
+                    updateList(
+                        deletionMode = viewModel.deletionMode.value == true,
+                        list = viewModel.countersViewModel.value
                     )
-                updateLabels(filteredList)
+                }
             }
         })
         viewModel.actions.observe(viewLifecycleOwner, {
             it?.let { action ->
                 when (action) {
-                    SHOW_NORMAL_LIST -> {
+                    MainListViewModelActions.ShowNormalList -> {
                         binding.failInternetConnectionGroup.visibility = View.GONE
                         binding.normalListGroup.visibility = View.VISIBLE
                     }
-                    SHOW_NETWORK_ERROR -> {
+                    MainListViewModelActions.ShowNetworkError -> {
                         binding.normalListGroup.visibility = View.GONE
                         binding.failInternetConnectionGroup.visibility = View.VISIBLE
                     }
+                    is MainListViewModelActions.ShowDialogNetworkError -> {
+                        //TODO: show network error on dialog
+                    }
+                    is MainListViewModelActions.ShowShareBottomSheet -> {
+                        val counterToShare = action.counter
+                        val sendIntent: Intent = Intent().apply {
+                            this.action = Intent.ACTION_SEND
+                            putExtra(
+                                Intent.EXTRA_TEXT,
+                                "${counterToShare.count} x ${counterToShare.name}"
+                            )
+                            type = "text/plain"
+                        }
+
+                        val shareIntent = Intent.createChooser(sendIntent, null)
+                        startActivity(shareIntent)
+                    }
+                }
+            }
+        })
+        viewModel.deletionMode.observe(viewLifecycleOwner, Observer {
+            it?.let { deletionMode ->
+                with(binding) {
+                    searchEditText.visibility = if (deletionMode) View.GONE else View.VISIBLE
+                    toolbar.visibility = if (deletionMode) View.VISIBLE else View.GONE
+                    updateList(
+                        deletionMode = deletionMode,
+                        list = viewModel.countersViewModel.value
+                    )
                 }
             }
         })
     }
 
     /**
-     * Method that initiliazes the toolbar of the delete mode
+     * Method that initializes the toolbar of the delete mode
      */
     private fun initializeToolbar() {
         binding.toolbar.inflateMenu(R.menu.toolbar_delete_mode)
+        binding.toolbar.setNavigationIcon(R.drawable.ic_close)
+        binding.toolbar.setNavigationOnClickListener { viewModel.deletionMode.postValue(false) }
         val menu: Menu = binding.toolbar.menu
+        binding.toolbar.setOnMenuItemClickListener { menuItem ->
+            if (menuItem.itemId == R.id.ic_delete) {
+                viewModel.deleteItems()
+            } else if (menuItem.itemId == R.id.ic_share) {
+                viewModel.shareItems()
+            }
+            return@setOnMenuItemClickListener true
+        }
     }
 
     /**
@@ -136,7 +177,29 @@ class MainListFragment : Fragment() {
             list.forEach { count += it.counter.count }
             nItemsLabel.text = getString(R.string.n_items, list.size)
             nTimesLabel.text = getString(R.string.n_times, count)
+            binding.toolbar.title = getString(
+                R.string.n_selected,
+                viewModel.selectedCounters.size
+            )
         }
+    }
+
+    /**
+     * Method that updates the list of items
+     * @param deletionMode [Boolean] if true it means the user is deleting some items, false
+     * otherwise
+     * @param list [List] of [CounterViewModel] to be shown
+     */
+    private fun updateList(deletionMode: Boolean, list: List<CounterViewModel>?) {
+        val finalList = list ?: listOf()
+        val filteredList = viewModel.filterCountersViewModels(
+            finalList
+        )
+        binding.list.adapter = CounterListRecyclerViewAdapter(
+            deletionMode = deletionMode,
+            filteredList
+        )
+        updateLabels(finalList)
     }
 
     companion object {

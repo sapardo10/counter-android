@@ -24,7 +24,8 @@ interface IDeleteCounterUseCase {
 class DeleteCounterUseCase(
     private val counterRepository: ICounterRepository
 ) : IDeleteCounterUseCase {
+
     override suspend operator fun invoke(counterToBeDeleted: Counter): Result<Boolean> {
-        TODO("Not yet implemented")
+        return counterRepository.deleteCounter(counterToBeDeleted)
     }
 }

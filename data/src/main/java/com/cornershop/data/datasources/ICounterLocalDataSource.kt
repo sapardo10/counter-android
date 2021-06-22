@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.Flow
  */
 interface ICounterLocalDataSource {
 
+    suspend fun delete(counter: Counter)
+
     suspend fun getAll(): Flow<List<Counter>>
 
     suspend fun setAll(counters: List<Counter>)

@@ -46,8 +46,16 @@ class CounterRepository @Inject constructor(
         }
     }
 
-    override suspend fun deleteCounter(counterId: Int): Result<Boolean> {
-        TODO("Not yet implemented")
+    override suspend fun deleteCounter(counter: Counter): Result<Boolean> {
+        return when (val result = remoteDataSource.deleteCounter(counter)) {
+            is Result.Success -> {
+                localDataSource.delete(counter)
+                Result.Success(data = true)
+            }
+            is Result.Failure -> {
+                Result.Failure(result.error)
+            }
+        }
     }
 
     @FlowPreview

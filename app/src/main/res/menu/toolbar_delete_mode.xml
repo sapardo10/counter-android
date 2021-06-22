@@ -2,14 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/menu_main_setting"
+        android:id="@+id/ic_delete"
         android:icon="@drawable/ic_delete"
         android:orderInCategory="100"
         android:title="@string/delete"
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/menu_main_setting2"
+        android:id="@+id/ic_share"
         android:icon="@drawable/ic_share"
         android:orderInCategory="200"
         android:title="@string/share"

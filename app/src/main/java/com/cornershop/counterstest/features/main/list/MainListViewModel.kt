@@ -1,12 +1,15 @@
 package com.cornershop.counterstest.features.main.list
 
+import androidx.annotation.StringRes
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.cornershop.counterstest.R
 import com.cornershop.data.models.Counter
 import com.cornershop.data.models.Result
 import com.cornershop.domain.IDecreaseCounterUseCase
+import com.cornershop.domain.IDeleteCounterUseCase
 import com.cornershop.domain.IGetAllCountersUseCase
 import com.cornershop.domain.IIncreaseCounterUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,13 +20,14 @@ import javax.inject.Inject
 @HiltViewModel
 class MainListViewModel @Inject constructor(
     private val decreaseCounterUseCase: IDecreaseCounterUseCase,
+    private val deleteCounterUseCase: IDeleteCounterUseCase,
     private val getAllCountersUseCase: IGetAllCountersUseCase,
     private val increaseCounterUseCase: IIncreaseCounterUseCase,
 ) : ViewModel() {
 
     val actions = MutableLiveData<MainListViewModelActions>()
     val countersViewModel = MutableLiveData<List<CounterViewModel>>()
-    var deletionMode = false
+    var deletionMode = MutableLiveData(false)
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     var searchText: String = ""
@@ -34,6 +38,25 @@ class MainListViewModel @Inject constructor(
     /**
      * -------------------------------------- PUBLIC METHODS ---------------------------------------
      */
+
+    /**
+     * Method that deletes the items selected by the user
+     */
+    fun deleteItems() {
+        viewModelScope.launch {
+            val result = selectedCounters.firstOrNull()?.let { deleteCounterUseCase(it) }
+            if (result is Result.Failure) {
+                actions.postValue(
+                    MainListViewModelActions.ShowDialogNetworkError(
+                        title = R.string.error_deleting_counter_title,
+                        message = R.string.connection_error_description
+                    )
+                )
+            } else {
+                deletionMode.postValue(false)
+            }
+        }
+    }
 
     /**
      * Method that filters the [List] of [CounterViewModel] given the current parameters
@@ -50,7 +73,7 @@ class MainListViewModel @Inject constructor(
      * 1. Starts listening to the list of counters for the user to show them on the list.
      */
     fun initializeView() {
-        actions.postValue(MainListViewModelActions.SHOW_NORMAL_LIST)
+        actions.postValue(MainListViewModelActions.ShowNormalList)
         countersViewModel.postValue(listOf())
         viewModelScope.launch {
             getAllCountersUseCase().collect { result ->
@@ -63,9 +86,9 @@ class MainListViewModel @Inject constructor(
                     }
                     else -> {
                         if (countersViewModel.value?.isEmpty() == true) {
-                            actions.postValue(MainListViewModelActions.SHOW_NETWORK_ERROR)
+                            actions.postValue(MainListViewModelActions.ShowNetworkError)
                         } else {
-                            actions.postValue(MainListViewModelActions.SHOW_NORMAL_LIST)
+                            actions.postValue(MainListViewModelActions.ShowNormalList)
                         }
                         countersViewModel.postValue(listOf())
                     }
@@ -83,6 +106,17 @@ class MainListViewModel @Inject constructor(
         searchText = newText
         countersViewModel.postValue(
             countersViewModel.value
+        )
+    }
+
+    /**
+     * Method called when the user wishes to share the selected item
+     */
+    fun shareItems() {
+        actions.postValue(
+            selectedCounters.firstOrNull()?.let {
+                MainListViewModelActions.ShowShareBottomSheet(counter = it)
+            }
         )
     }
 
@@ -132,11 +166,9 @@ class MainListViewModel @Inject constructor(
      */
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun onItemLongTap(counter: Counter) {
-        deletionMode = !deletionMode
         selectedCounters.add(counter)
-        countersViewModel.postValue(
-            countersViewModel.value
-        )
+        deletionMode.postValue(deletionMode.value != true)
+        countersViewModel.postValue(countersViewModel.value)
     }
 
     /**
@@ -155,21 +187,23 @@ class MainListViewModel @Inject constructor(
      */
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun onItemSelectionTapped(counter: Counter) {
-        if (selectedCounters.contains(counter)) {
-            selectedCounters.remove(counter)
-        } else {
-            selectedCounters.add(counter)
+        if (selectedCounters.isNotEmpty()) {
+            selectedCounters.clear()
         }
+        selectedCounters.add(counter)
 
-        deletionMode = selectedCounters.isNotEmpty()
-
-        countersViewModel.postValue(
-            countersViewModel.value
-        )
+        deletionMode.postValue(selectedCounters.isNotEmpty())
+        countersViewModel.postValue(countersViewModel.value)
     }
 }
 
-enum class MainListViewModelActions {
-    SHOW_NORMAL_LIST,
-    SHOW_NETWORK_ERROR
+sealed class MainListViewModelActions {
+    object ShowNormalList : MainListViewModelActions()
+    object ShowNetworkError : MainListViewModelActions()
+    data class ShowDialogNetworkError(
+        @StringRes val title: Int,
+        @StringRes val message: Int
+    ) : MainListViewModelActions()
+
+    data class ShowShareBottomSheet(val counter: Counter) : MainListViewModelActions()
 }
