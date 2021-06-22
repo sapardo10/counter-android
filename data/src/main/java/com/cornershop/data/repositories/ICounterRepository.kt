@@ -19,17 +19,17 @@ interface ICounterRepository {
 
     /**
      * Method that decreases by one the count of a counter
-     * @param counterId [Int] representing the id of the counter that should be decreased
+     * @param counter [Counter] to be decreased
      * @return If success, a [Boolean]. If failure, a [CounterError]
      */
-    suspend fun decreaseCounter(counterId: Int): Result<Boolean>
+    suspend fun decreaseCounter(counter: Counter): Result<Boolean>
 
     /**
      * Method that deletes a counter
-     * @param counterId [Int] representing the id of the counter that should be deleted
+     * @param counter [Counter] representing the counter that should be deleted
      * @return If success, a [Boolean]. If failure, a [CounterError]
      */
-    suspend fun deleteCounter(counterId: Int): Result<Boolean>
+    suspend fun deleteCounter(counter: Counter): Result<Boolean>
 
     /**
      * Method that returns all the counters available for the user
@@ -39,8 +39,8 @@ interface ICounterRepository {
 
     /**
      * Method that increases by one the count of a counter
-     * @param counterId [Int] representing the id of the counter that should be increased
+     * @param counter [Counter] to be increased
      * @return If success, a [Boolean]. If failure, a [CounterError]
      */
-    suspend fun increaseCounter(counterId: Int): Result<Boolean>
+    suspend fun increaseCounter(counter: Counter): Result<Boolean>
 }

@@ -2,17 +2,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.cornershop.counterstest">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".core.BaseApplication"
+        android:allowBackup="false"
+        android:fullBackupContent="@xml/backup_descriptor"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CountersNormal"
-        android:fullBackupContent="@xml/backup_descriptor"
-        android:allowBackup="false"
         android:usesCleartextTraffic="${usesCleartextTraffic}">
         <activity
             android:name="com.cornershop.counterstest.features.welcome.WelcomeActivity"
@@ -23,10 +23,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
+
         <activity
             android:name=".features.main.MainActivity"
-            android:theme="@style/Theme.CountersWelcome"/>
+            android:theme="@style/Theme.CountersMain" />
+
+        <activity
+            android:name=".features.create.CreateActivity"
+            android:theme="@style/Theme.CountersCreate" />
     </application>
 
 </manifest>

@@ -21,15 +21,15 @@ android {
 
     buildTypes {
         debug {
-            manifestPlaceholders = [usesCleartextTraffic:"true"]
+            manifestPlaceholders = [usesCleartextTraffic: "true"]
 
-            buildConfigField "String", 'BASE_URL', "\"http://9a0ace022bfd.ngrok.io/api/\""
+            buildConfigField "String", 'BASE_URL', "\"http://2f73c056aad4.ngrok.io/api/\""
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
-            manifestPlaceholders = [usesCleartextTraffic:"false"]
+            manifestPlaceholders = [usesCleartextTraffic: "false"]
 
             ///Replace following line with production api
             buildConfigField "String", 'BASE_URL', "\"http://9a0ace022bfd.ngrok.io/api/\""
@@ -62,6 +62,9 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.3.1"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1"
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.2.0'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
@@ -69,7 +72,7 @@ dependencies {
     ///Room
     def room_version = "2.3.0"
     implementation "androidx.room:room-runtime:$room_version"
-    kapt  "androidx.room:room-compiler:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
 
     ///Multidex
@@ -91,7 +94,7 @@ dependencies {
     implementation "com.google.dagger:hilt-android-compiler:2.37"
 
     // For instrumentation tests
-    androidTestImplementation  'com.google.dagger:hilt-android-testing:2.37'
+    androidTestImplementation 'com.google.dagger:hilt-android-testing:2.37'
     kaptAndroidTest 'com.google.dagger:hilt-compiler:2.37'
 
     // For local unit tests
@@ -103,6 +106,10 @@ dependencies {
 
     ///Androidx testing
     testImplementation "androidx.arch.core:core-testing:2.1.0"
+
+    ///Test coroutines
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.0'
+    testImplementation "org.jetbrains.kotlin:kotlin-reflect:1.5.10"
 
     api project(':domain')
 }

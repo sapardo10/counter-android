@@ -12,20 +12,24 @@ interface IDecreaseCounterUseCase {
     /**
      * Invocation of the use case
      * @param counterToDecrement [Counter] that the user wants to decrement
-     * @param decrement [Int] that indicates how much does the user want to decrement the [Counter]
      * @return [Result] as [Result.Success] with [Boolean] or as [Result.Failure] with the failure
      * reason
      */
-    suspend operator fun invoke(counterToDecrement: Counter, decrement: Int = 1): Result<Boolean>
+    suspend operator fun invoke(counterToDecrement: Counter): Result<Boolean>
 }
 
 /**
  * Implementation of [IDecreaseCounterUseCase]
  */
 class DecreaseCounterUseCase(
-        private val counterRepository: ICounterRepository
-): IDecreaseCounterUseCase {
-    override suspend operator fun invoke(counterToDecrement: Counter, decrement: Int): Result<Boolean> {
-        TODO("Not yet implemented")
+    private val counterRepository: ICounterRepository
+) : IDecreaseCounterUseCase {
+
+    /**
+     * -------------------------------------- PUBLIC METHODS ---------------------------------------
+     */
+
+    override suspend operator fun invoke(counterToDecrement: Counter): Result<Boolean> {
+        return counterRepository.decreaseCounter(counterToDecrement)
     }
 }
