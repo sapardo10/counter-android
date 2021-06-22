@@ -27,7 +27,7 @@ class MainListViewModel @Inject constructor(
 
     val actions = MutableLiveData<MainListViewModelActions>()
     val countersViewModel = MutableLiveData<List<CounterViewModel>>()
-    var deletionMode = MutableLiveData(false)
+    var deletionMode = MutableLiveData<Boolean>(true)
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     var searchText: String = ""
@@ -187,10 +187,12 @@ class MainListViewModel @Inject constructor(
      */
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun onItemSelectionTapped(counter: Counter) {
-        if (selectedCounters.isNotEmpty()) {
+        if (selectedCounters.size == 1 && selectedCounters.contains(counter)) {
+            selectedCounters.remove(counter)
+        } else {
             selectedCounters.clear()
+            selectedCounters.add(counter)
         }
-        selectedCounters.add(counter)
 
         deletionMode.postValue(selectedCounters.isNotEmpty())
         countersViewModel.postValue(countersViewModel.value)

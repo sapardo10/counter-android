@@ -7,6 +7,7 @@ import com.cornershop.data.models.Counter
 import com.cornershop.data.models.CounterError
 import com.cornershop.data.models.Result
 import com.cornershop.domain.IDecreaseCounterUseCase
+import com.cornershop.domain.IDeleteCounterUseCase
 import com.cornershop.domain.IGetAllCountersUseCase
 import com.cornershop.domain.IIncreaseCounterUseCase
 import kotlinx.coroutines.Dispatchers
@@ -44,9 +45,14 @@ class MainListViewModelTest {
     /**
      * Mocks
      */
+    private var mockActionsObserver: Observer<MainListViewModelActions> =
+        mock(Observer::class.java) as Observer<MainListViewModelActions>
     private var mockCountersObserver: Observer<List<CounterViewModel>> =
         mock(Observer::class.java) as Observer<List<CounterViewModel>>
+    private var mockDeletionModeObserver: Observer<Boolean> =
+        mock(Observer::class.java) as Observer<Boolean>
     private val mockDecreaseCounterUseCase = mock(IDecreaseCounterUseCase::class.java)
+    private val mockDeleteCounterUseCase = mock(IDeleteCounterUseCase::class.java)
     private val mockGetAllCountersUseCase = mock(IGetAllCountersUseCase::class.java)
     private val mockIncreaseCounterUseCase = mock(IIncreaseCounterUseCase::class.java)
 
@@ -56,10 +62,13 @@ class MainListViewModelTest {
         Dispatchers.setMain(testDispatcher)
         viewModel = MainListViewModel(
             decreaseCounterUseCase = mockDecreaseCounterUseCase,
+            deleteCounterUseCase = mockDeleteCounterUseCase,
             getAllCountersUseCase = mockGetAllCountersUseCase,
             increaseCounterUseCase = mockIncreaseCounterUseCase
         )
+        viewModel.actions.observeForever(mockActionsObserver)
         viewModel.countersViewModel.observeForever(mockCountersObserver)
+        viewModel.deletionMode.observeForever(mockDeletionModeObserver)
     }
 
     @ExperimentalCoroutinesApi
@@ -68,6 +77,7 @@ class MainListViewModelTest {
         verifyNoMoreInteractions(
             mockCountersObserver,
             mockDecreaseCounterUseCase,
+            mockDeleteCounterUseCase,
             mockGetAllCountersUseCase,
             mockIncreaseCounterUseCase
         )
@@ -89,8 +99,9 @@ class MainListViewModelTest {
 
             viewModel.initializeView()
 
+            verify(mockActionsObserver).onChanged(MainListViewModelActions.ShowNormalList)
             verify(mockGetAllCountersUseCase).invoke()
-            verify(mockCountersObserver).onChanged(any())
+            verify(mockCountersObserver, times(2)).onChanged(any())
             assertEquals(1, viewModel.countersViewModel.value?.size)
             val item = viewModel.countersViewModel.value?.first()
             assertEquals(counter, item?.counter)
@@ -100,7 +111,6 @@ class MainListViewModelTest {
     @Test
     fun `Initialize view - Empty list of counters`() {
         runBlocking {
-
             `when`(mockGetAllCountersUseCase.invoke()).thenReturn(
                 flow {
                     emit(Result.Success(data = listOf<Counter>()))
@@ -109,8 +119,9 @@ class MainListViewModelTest {
 
             viewModel.initializeView()
 
+            verify(mockActionsObserver).onChanged(MainListViewModelActions.ShowNormalList)
             verify(mockGetAllCountersUseCase).invoke()
-            verify(mockCountersObserver).onChanged(any())
+            verify(mockCountersObserver, times(2)).onChanged(any())
             assertEquals(0, viewModel.countersViewModel.value?.size)
         }
     }
@@ -118,7 +129,6 @@ class MainListViewModelTest {
     @Test
     fun `Initialize view - Network error`() {
         runBlocking {
-
             `when`(mockGetAllCountersUseCase.invoke()).thenReturn(
                 flow {
                     emit(Result.Failure<List<Counter>>(error = CounterError.NETWORK_ERROR))
@@ -128,14 +138,14 @@ class MainListViewModelTest {
             viewModel.initializeView()
 
             verify(mockGetAllCountersUseCase).invoke()
-            verify(mockCountersObserver).onChanged(any())
-            assertEquals(0, viewModel.countersViewModel.value?.size)
+            verify(mockActionsObserver).onChanged(MainListViewModelActions.ShowNetworkError)
+            verify(mockCountersObserver, times(2)).onChanged(listOf())
         }
     }
 
     @Test
     fun `Map Counter to CounterViewModel`() {
-        val counter = Counter(1,1,"counter")
+        val counter = Counter(1, 1, "counter")
 
         val result = viewModel.mapCounterToCounterViewModel(counter = counter)
 
@@ -150,7 +160,7 @@ class MainListViewModelTest {
     @Test
     fun `On item minus tap`() {
         runBlocking {
-            val counter = Counter(1,1,"counter")
+            val counter = Counter(1, 1, "counter")
 
             viewModel.onItemMinusTap(counter)
 
@@ -161,7 +171,7 @@ class MainListViewModelTest {
     @Test
     fun `On item plus tap`() {
         runBlocking {
-            val counter = Counter(1,1,"counter")
+            val counter = Counter(1, 1, "counter")
 
             viewModel.onItemPlusTap(counter)
 
@@ -171,7 +181,7 @@ class MainListViewModelTest {
 
     @Test
     fun `Is item selected - true`() {
-        val counter = Counter(1,1,"counter")
+        val counter = Counter(1, 1, "counter")
         viewModel.selectedCounters.add(counter)
 
         val result = viewModel.isItemSelected(counter)
@@ -181,7 +191,7 @@ class MainListViewModelTest {
 
     @Test
     fun `Is item selected - false`() {
-        val counter = Counter(1,1,"counter")
+        val counter = Counter(1, 1, "counter")
 
         val result = viewModel.isItemSelected(counter)
 
@@ -190,40 +200,40 @@ class MainListViewModelTest {
 
     @Test
     fun `On item selection tapped - counter has been selected before and deletionMode is set to off`() {
-        val counter = Counter(1,1,"counter")
+        val counter = Counter(1, 1, "counter")
         viewModel.selectedCounters.add(counter)
-        viewModel.deletionMode = true
+        viewModel.deletionMode.value = true
 
         viewModel.onItemSelectionTapped(counter)
 
-        assertFalse(viewModel.deletionMode)
         assertEquals(0, viewModel.selectedCounters.size)
         verify(mockCountersObserver).onChanged(any())
+        verify(mockDeletionModeObserver, times(1)).onChanged(false)
     }
 
     @Test
     fun `On item selection tapped - counter has been selected before and deletionMode is not changed`() {
-        val counter = Counter(1,1,"counter")
-        val counterTwo = Counter(2,2,"counter two")
+        val counter = Counter(1, 1, "counter")
+        val counterTwo = Counter(2, 2, "counter two")
         viewModel.selectedCounters.add(counter)
         viewModel.selectedCounters.add(counterTwo)
-        viewModel.deletionMode = true
+        viewModel.deletionMode.value = true
 
         viewModel.onItemSelectionTapped(counter)
 
-        assertTrue(viewModel.deletionMode)
         assertEquals(1, viewModel.selectedCounters.size)
         verify(mockCountersObserver).onChanged(any())
     }
 
     @Test
     fun `On item selection tapped - counter has not been selected before and deletionMode is set to on`() {
-        val counter = Counter(1,1,"counter")
-        viewModel.deletionMode = false
+        val counter = Counter(1, 1, "counter")
+        viewModel.selectedCounters.clear()
+        viewModel.deletionMode.value = false
 
         viewModel.onItemSelectionTapped(counter)
 
-        assertTrue(viewModel.deletionMode)
+        verify(mockDeletionModeObserver, times(2)).onChanged(true)
         assertEquals(1, viewModel.selectedCounters.size)
         verify(mockCountersObserver).onChanged(any())
     }
