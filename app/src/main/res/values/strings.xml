@@ -28,9 +28,15 @@
 —Willie Nelson</string>
     <string name="search_counters">Search Counters</string>
     <string name="add_counters">Add counters</string>
-    <string name="n_items">%d items</string>
-    <string name="n_times">%d times</string>
-    <string name="n_selected">%d selected</string>
+    <plurals name="n_items">
+        <item quantity="one">%d items</item>
+    </plurals>
+    <plurals name="n_times">
+        <item quantity="one">%d times</item>
+    </plurals>
+    <plurals name="n_selected">
+        <item quantity="one">%d selected</item>
+    </plurals>
     <string name="error_load_counters_title">Couldn’t load the counters</string>
     <string name="error_creating_counter_title">Couldn’t create the counter</string>
     <string name="error_updating_counter_title">Couldn’t update the “%s” counter to %d</string>

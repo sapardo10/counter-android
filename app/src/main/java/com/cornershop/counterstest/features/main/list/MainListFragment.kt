@@ -5,12 +5,10 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cornershop.counterstest.R
 import com.cornershop.counterstest.databinding.FragmentMainListBinding
@@ -135,7 +133,7 @@ class MainListFragment : Fragment() {
                 }
             }
         })
-        viewModel.deletionMode.observe(viewLifecycleOwner, Observer {
+        viewModel.deletionMode.observe(viewLifecycleOwner, {
             it?.let { deletionMode ->
                 with(binding) {
                     searchEditText.visibility = if (deletionMode) View.GONE else View.VISIBLE
@@ -156,7 +154,6 @@ class MainListFragment : Fragment() {
         binding.toolbar.inflateMenu(R.menu.toolbar_delete_mode)
         binding.toolbar.setNavigationIcon(R.drawable.ic_close)
         binding.toolbar.setNavigationOnClickListener { viewModel.deletionMode.postValue(false) }
-        val menu: Menu = binding.toolbar.menu
         binding.toolbar.setOnMenuItemClickListener { menuItem ->
             if (menuItem.itemId == R.id.ic_delete) {
                 viewModel.deleteItems()
@@ -174,11 +171,11 @@ class MainListFragment : Fragment() {
     private fun updateLabels(list: List<CounterViewModel>) {
         with(binding) {
             var count = 0
-            list.forEach { count += it.counter.count }
-            nItemsLabel.text = getString(R.string.n_items, list.size)
-            nTimesLabel.text = getString(R.string.n_times, count)
-            binding.toolbar.title = getString(
-                R.string.n_selected,
+            for (viewModel in list) count += viewModel.counter.count
+            nItemsLabel.text = resources.getQuantityString(R.plurals.n_items, list.size)
+            nTimesLabel.text = resources.getQuantityString(R.plurals.n_times, count)
+            binding.toolbar.title = resources.getQuantityString(
+                R.plurals.n_selected,
                 viewModel.selectedCounters.size
             )
         }
