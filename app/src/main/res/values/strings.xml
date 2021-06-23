@@ -29,13 +29,16 @@
     <string name="search_counters">Search Counters</string>
     <string name="add_counters">Add counters</string>
     <plurals name="n_items">
-        <item quantity="one">%d items</item>
+        <item quantity="one">%d item</item>
+        <item quantity="other">%d items</item>
     </plurals>
     <plurals name="n_times">
-        <item quantity="one">%d times</item>
+        <item quantity="one">%d time</item>
+        <item quantity="other">%d times</item>
     </plurals>
     <plurals name="n_selected">
         <item quantity="one">%d selected</item>
+        <item quantity="other">%d selected</item>
     </plurals>
     <string name="error_load_counters_title">Couldn’t load the counters</string>
     <string name="error_creating_counter_title">Couldn’t create the counter</string>
@@ -55,7 +58,9 @@
     <string name="create_counter">Create counter</string>
     <string name="counter_name_label">Name</string>
     <string name="counter_name_hint">Cups of coffee</string>
+    <string name="create_counter_error_blank">Counter name cannot be empty</string>
     <string name="create_counter_disclaimer">Give it a name. Creative block? See examples.</string>
+    <string name="create_counter_disclaimer_text_link">examples.</string>
     <string name="delete_x_question">Delete "%s"?</string>
     <string name="n_per_counter_name">%d × %s</string>
     <!-- TODO: Remove or change this placeholder text -->

@@ -1,6 +1,7 @@
 package com.cornershop.counterstest.datasources
 
 import com.cornershop.counterstest.network.apis.CounterApi
+import com.cornershop.counterstest.network.dtos.CreateCounterDTO
 import com.cornershop.data.datasources.ICounterRemoteDataSource
 import com.cornershop.data.models.Counter
 import com.cornershop.data.models.CounterError
@@ -16,9 +17,26 @@ class CounterRemoteDataSource constructor(
     private val counterApi: CounterApi
 ) : ICounterRemoteDataSource {
 
+
     /**
      * -------------------------------------- PUBLIC METHODS ---------------------------------------
      */
+
+    override suspend fun createCounter(title: String): Result<List<Counter>> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val counters =
+                    counterApi.createCounter(CreateCounterDTO(title = title)).map { it.toCounter() }
+                Success(
+                    data = counters
+                )
+            } catch (e: Exception) {
+                Result.Failure(
+                    error = CounterError.NETWORK_ERROR
+                )
+            }
+        }
+    }
 
     override suspend fun decreaseCounter(counter: Counter): Result<List<Counter>> {
         return withContext(Dispatchers.IO) {
@@ -39,7 +57,8 @@ class CounterRemoteDataSource constructor(
     override suspend fun deleteCounter(counter: Counter): Result<List<Counter>> {
         return withContext(Dispatchers.IO) {
             try {
-                val counters = counterApi.deleteCounter(counter.toCounterDTO()).map { it.toCounter() }
+                val counters =
+                    counterApi.deleteCounter(counter.toCounterDTO()).map { it.toCounter() }
                 Success(
                     data = counters
                 )

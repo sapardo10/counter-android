@@ -18,6 +18,7 @@ class MainViewModel @Inject constructor(
 ) : ViewModel() {
 
     val actions = SingleLiveEvent<MainViewModelActions?>()
+    private var isShowingList = false
 
     /**
      * -------------------------------------- PUBLIC METHODS ---------------------------------------
@@ -31,8 +32,8 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             getAllCountersUseCase().collect { result ->
                 when (result) {
-                    is Result.Success -> onCountersFetchedSuccessfully(result.data)
-                    is Result.Failure -> onCountersFetchedSuccessfully(result.error)
+                    is Result.Success -> onCountersFetchedFailed(result.data)
+                    is Result.Failure -> onCountersFetchedFailed(result.error)
                     else -> actions.postValue(MainViewModelActions.ShowEmptyState)
                 }
             }
@@ -54,7 +55,7 @@ class MainViewModel @Inject constructor(
      * Method called when the fetching of the counters failed
      * @param error [CounterError] why the fetching failed
      */
-    private fun onCountersFetchedSuccessfully(error: CounterError) {
+    private fun onCountersFetchedFailed(error: CounterError) {
         if (error == CounterError.NETWORK_ERROR) {
             actions.postValue(MainViewModelActions.ShowListCounterNoInternetConnectionDialog)
         }
@@ -64,11 +65,15 @@ class MainViewModel @Inject constructor(
      * Method called when the fetching of the counters was a success
      * @param list [List] of [Counter] of the application
      */
-    private fun onCountersFetchedSuccessfully(list: List<Counter>?) {
+    private fun onCountersFetchedFailed(list: List<Counter>?) {
         if (list?.isEmpty() == true) {
+            isShowingList = false
             actions.postValue(MainViewModelActions.ShowEmptyState)
         } else {
-            actions.postValue(MainViewModelActions.ShowListCounter)
+            if (!isShowingList) {
+                actions.postValue(MainViewModelActions.ShowListCounter)
+            }
+            isShowingList = true
         }
     }
 }

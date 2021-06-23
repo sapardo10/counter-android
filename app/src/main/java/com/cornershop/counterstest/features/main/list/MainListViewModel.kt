@@ -9,7 +9,7 @@ import com.cornershop.counterstest.R
 import com.cornershop.data.models.Counter
 import com.cornershop.data.models.Result
 import com.cornershop.domain.IDecreaseCounterUseCase
-import com.cornershop.domain.IDeleteCounterUseCase
+import com.cornershop.domain.IDeleteMultipleCounterUseCase
 import com.cornershop.domain.IGetAllCountersUseCase
 import com.cornershop.domain.IIncreaseCounterUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,14 +20,14 @@ import javax.inject.Inject
 @HiltViewModel
 class MainListViewModel @Inject constructor(
     private val decreaseCounterUseCase: IDecreaseCounterUseCase,
-    private val deleteCounterUseCase: IDeleteCounterUseCase,
+    private val deleteMultipleCounterUseCase: IDeleteMultipleCounterUseCase,
     private val getAllCountersUseCase: IGetAllCountersUseCase,
     private val increaseCounterUseCase: IIncreaseCounterUseCase,
 ) : ViewModel() {
 
     val actions = MutableLiveData<MainListViewModelActions>()
     val countersViewModel = MutableLiveData<List<CounterViewModel>>()
-    var deletionMode = MutableLiveData<Boolean>(true)
+    var deletionMode = MutableLiveData(false)
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     var searchText: String = ""
@@ -44,16 +44,17 @@ class MainListViewModel @Inject constructor(
      */
     fun deleteItems() {
         viewModelScope.launch {
-            val result = selectedCounters.firstOrNull()?.let { deleteCounterUseCase(it) }
-            if (result is Result.Failure) {
+            val deletionFailures = deleteMultipleCounterUseCase(selectedCounters)
+            if (deletionFailures.isEmpty()) {
+                selectedCounters.clear()
+                deletionMode.postValue(false)
+            } else {
                 actions.postValue(
                     MainListViewModelActions.ShowDialogNetworkError(
                         title = R.string.error_deleting_counter_title,
                         message = R.string.connection_error_description
                     )
                 )
-            } else {
-                deletionMode.postValue(false)
             }
         }
     }
@@ -85,10 +86,10 @@ class MainListViewModel @Inject constructor(
                             .let { data -> countersViewModel.postValue(data) }
                     }
                     else -> {
-                        if (countersViewModel.value?.isEmpty() == true) {
-                            actions.postValue(MainListViewModelActions.ShowNetworkError)
-                        } else {
+                        if (countersViewModel.value?.isNotEmpty() == true) {
                             actions.postValue(MainListViewModelActions.ShowNormalList)
+                        } else {
+                            actions.postValue(MainListViewModelActions.ShowNetworkError)
                         }
                         countersViewModel.postValue(listOf())
                     }
@@ -187,10 +188,9 @@ class MainListViewModel @Inject constructor(
      */
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun onItemSelectionTapped(counter: Counter) {
-        if (selectedCounters.size == 1 && selectedCounters.contains(counter)) {
+        if (selectedCounters.contains(counter)) {
             selectedCounters.remove(counter)
         } else {
-            selectedCounters.clear()
             selectedCounters.add(counter)
         }
 

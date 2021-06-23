@@ -13,9 +13,10 @@ interface ICounterRepository {
 
     /**
      * Method that creates a new counter
+     * @param title [String] name of the counter to be created
      * @return If success, a [Boolean]. If failure, a [CounterError]
      */
-    suspend fun createCounter(): Result<Boolean>
+    suspend fun createCounter(title: String): Result<Boolean>
 
     /**
      * Method that decreases by one the count of a counter

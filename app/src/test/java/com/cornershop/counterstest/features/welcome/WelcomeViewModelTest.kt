@@ -18,10 +18,12 @@ class WelcomeViewModelTest {
     @get:Rule
     var rule: TestRule = InstantTaskExecutorRule()
 
-    lateinit var viewModel: WelcomeViewModel
+    private lateinit var viewModel: WelcomeViewModel
 
-    private var mockActionsObserver: Observer<WelcomeViewModelActions> = mock(Observer::class.java) as Observer<WelcomeViewModelActions>
-    private var mockUserPreferencesHelper: IUserPreferencesHelper = mock(IUserPreferencesHelper::class.java)
+    private var mockActionsObserver: Observer<WelcomeViewModelActions> =
+        mock(Observer::class.java) as Observer<WelcomeViewModelActions>
+    private var mockUserPreferencesHelper: IUserPreferencesHelper =
+        mock(IUserPreferencesHelper::class.java)
 
     @Before
     fun setUp() {

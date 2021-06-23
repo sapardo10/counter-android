@@ -16,7 +16,7 @@ class DecreaseCounterUseCaseTest {
 
     lateinit var useCase: IDecreaseCounterUseCase
 
-    var mockCounterRepository: ICounterRepository = Mockito.mock(ICounterRepository::class.java)
+    private var mockCounterRepository: ICounterRepository = Mockito.mock(ICounterRepository::class.java)
 
     @BeforeEach
     fun setUp() {
@@ -33,7 +33,7 @@ class DecreaseCounterUseCaseTest {
     @Test
     fun `Invoke - response is success`() {
         runBlocking {
-            val counter = Counter(1, 1, "counter")
+            val counter = Counter(1, "jdkfshas", "counter")
 
             Mockito.`when`(mockCounterRepository.decreaseCounter(counter))
                 .thenReturn(Result.Success(data = true))
@@ -49,7 +49,7 @@ class DecreaseCounterUseCaseTest {
     @Test
     fun `Invoke - response is failure`() {
         runBlocking {
-            val counter = Counter(1, 1, "counter")
+            val counter = Counter(1, "jdkfshas", "counter")
 
             Mockito.`when`(mockCounterRepository.decreaseCounter(counter))
                 .thenReturn(Result.Failure(error = CounterError.NETWORK_ERROR))

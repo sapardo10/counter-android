@@ -71,7 +71,7 @@ class MainViewModelTest {
     @Test
     fun `Initialize view - fetch counter success with non-empty list`() {
         runBlocking {
-            val counter = Counter(1, 1, "counter")
+            val counter = Counter(1, "jdkfshas", "counter")
 
             `when`(mockGetAllCountersUseCase.invoke()).thenReturn(flow {
                 emit(Result.Success(data = listOf(counter)))
