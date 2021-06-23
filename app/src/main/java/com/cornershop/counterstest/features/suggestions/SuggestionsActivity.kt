@@ -1,0 +1,59 @@
+package com.cornershop.counterstest.features.suggestions
+
+import android.os.Bundle
+import android.view.MenuItem
+import androidx.activity.viewModels
+import com.cornershop.counterstest.R
+import com.cornershop.counterstest.core.BaseActivity
+import com.cornershop.counterstest.databinding.ActivitySuggestionsBinding
+import dagger.hilt.android.AndroidEntryPoint
+
+@AndroidEntryPoint
+class SuggestionsActivity : BaseActivity() {
+
+    private val viewModel: SuggestionsViewModel by viewModels()
+
+    private lateinit var binding: ActivitySuggestionsBinding
+
+    /**
+     * ------------------------------------ LIFECYCLE METHODS --------------------------------------
+     */
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivitySuggestionsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        configureToolbar()
+    }
+
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    /**
+     * ------------------------------------- PRIVATE METHODS ---------------------------------------
+     */
+
+    /**
+     * Method that configures all the icons, texts and interactions of the toolbar
+     */
+    private fun configureToolbar() {
+        with(binding.toolbar) {
+            setSupportActionBar(this)
+            supportActionBar?.title = getString(R.string.examples)
+            supportActionBar?.setDisplayShowHomeEnabled(true)
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        }
+    }
+}

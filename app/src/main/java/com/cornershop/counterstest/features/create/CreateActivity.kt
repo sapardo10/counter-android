@@ -1,6 +1,7 @@
 package com.cornershop.counterstest.features.create
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -12,6 +13,7 @@ import androidx.activity.viewModels
 import com.cornershop.counterstest.R
 import com.cornershop.counterstest.core.BaseActivity
 import com.cornershop.counterstest.databinding.ActivityCreateBinding
+import com.cornershop.counterstest.features.suggestions.SuggestionsActivity
 import com.cornershop.counterstest.utils.insertLinks
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -108,6 +110,10 @@ class CreateActivity : BaseActivity() {
         }
     }
 
+    /**
+     * Method that returns a [TextWatcher] to implement on the texfield to listen to the changes
+     * of it to create a new counter
+     */
     private fun getTextWatcher(): TextWatcher {
         return object : TextWatcher {
             override fun beforeTextChanged(
@@ -137,7 +143,9 @@ class CreateActivity : BaseActivity() {
         viewModel.actions.observe(this, {
             it?.let { action ->
                 when (action) {
-                    CreateViewModelActions.GO_TO_EXAMPLES_SCREEN -> print("Examples screen")
+                    CreateViewModelActions.GO_TO_EXAMPLES_SCREEN -> {
+                        navigateToSuggestionsScreen()
+                    }
                     CreateViewModelActions.HIDE_COUNTER_EMPTY_ERROR -> {
                         with(binding.textField) {
                             error = null
@@ -163,5 +171,14 @@ class CreateActivity : BaseActivity() {
                 }
             }
         })
+    }
+
+    /**
+     * Method that directs the user to the suggestions screen
+     */
+    private fun navigateToSuggestionsScreen() {
+        val intent = Intent(this, SuggestionsActivity::class.java)
+        startActivity(intent)
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right)
     }
 }

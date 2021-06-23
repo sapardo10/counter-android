@@ -33,6 +33,10 @@
         <item name="android:windowBackground">@color/welcome_background</item>
     </style>
 
+    <style name="Theme.CountersSuggestions" parent="Theme.CountersNormal">
+        <item name="android:windowBackground">@color/welcome_background</item>
+    </style>
+
     <!-- Views theme -->
     <style name="Theme.ButtonTheme" parent="Theme.CountersNormal">
         <item name="android:drawablePadding">8dp</item>
@@ -78,6 +82,10 @@
     <style name="Theme.Text.SmallBold" parent="Theme.CountersNormal">
         <item name="fontFamily">@font/roboto_bold</item>
         <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="Theme.Toolbar" parent="Theme.CountersNormal">
+        <item name="colorControlNormal">?attr/colorPrimary</item>
     </style>
 
 </resources>

@@ -30,6 +30,10 @@
         <activity
             android:name=".features.create.CreateActivity"
             android:theme="@style/Theme.CountersCreate" />
+
+        <activity
+            android:name=".features.suggestions.SuggestionsActivity"
+            android:theme="@style/Theme.CountersSuggestions" />
     </application>
 
 </manifest>
