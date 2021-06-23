@@ -18,7 +18,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Cups of coffeee" />
+        tools:text="Cups of coffee" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/normal_actions_group"

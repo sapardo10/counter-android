@@ -134,7 +134,7 @@ class MainListViewModelTest {
 
             `when`(mockGetAllCountersUseCase.invoke()).thenReturn(
                 flow {
-                    emit(Result.Success(data = listOf<Counter>(counter)))
+                    emit(Result.Success(data = listOf(counter)))
                 }
             )
 

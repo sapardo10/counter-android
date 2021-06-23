@@ -17,7 +17,7 @@ class CreateViewModel @Inject constructor(
 ) : ViewModel() {
 
     val actions: SingleLiveEvent<CreateViewModelActions> = SingleLiveEvent()
-    var newCounterTitle: String = ""
+    private var newCounterTitle: String = ""
 
     fun createCounter() {
         actions.postValue(CreateViewModelActions.SHOW_CREATING_LOADING)

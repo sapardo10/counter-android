@@ -67,7 +67,7 @@ class CounterRepositoryTest {
     fun `Decrease counter - service response is successful`() {
         runBlocking {
             val counter = Counter(id = "jdkfshas", count = 3, name = "counter")
-            val list = listOf<Counter>(counter)
+            val list = listOf(counter)
 
             `when`(mockRemoteDataSource.decreaseCounter(counter)).thenReturn(Result.Success(data = list))
 
@@ -99,7 +99,7 @@ class CounterRepositoryTest {
     fun `Delete counter - service response is successful`() {
         runBlocking {
             val counter = Counter(id = "jdkfshas", count = 3, name = "counter")
-            val list = listOf<Counter>(counter)
+            val list = listOf(counter)
 
             `when`(mockRemoteDataSource.deleteCounter(counter)).thenReturn(Result.Success(data = list))
 
@@ -135,7 +135,7 @@ class CounterRepositoryTest {
     fun `Increase counter - service response is successful`() {
         runBlocking {
             val counter = Counter(id = "jdkfshas", count = 3, name = "counter")
-            val list = listOf<Counter>(counter)
+            val list = listOf(counter)
 
             `when`(mockRemoteDataSource.increaseCounter(counter)).thenReturn(Result.Success(data = list))
 

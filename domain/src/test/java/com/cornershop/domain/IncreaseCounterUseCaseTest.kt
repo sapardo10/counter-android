@@ -1,22 +1,22 @@
-package com.cornershop.domain;
+package com.cornershop.domain
 
 import com.cornershop.data.models.Counter
 import com.cornershop.data.models.CounterError
 import com.cornershop.data.models.Result
 import com.cornershop.data.repositories.ICounterRepository
 import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.Mockito.*
 
 class IncreaseCounterUseCaseTest {
 
     lateinit var useCase: IIncreaseCounterUseCase
 
-    var mockCounterRepository: ICounterRepository = mock(ICounterRepository::class.java)
+    private var mockCounterRepository: ICounterRepository = mock(ICounterRepository::class.java)
 
     @BeforeEach
     fun setUp() {

@@ -45,11 +45,6 @@
         <item name="backgroundTint">?attr/colorPrimary</item>
     </style>
 
-    <style name="Theme.EditText" parent="Theme.CountersNormal">
-        <item name="backgroundTint">?attr/colorPrimary</item>
-        <item name="android:backgroundTint">?attr/colorPrimary</item>
-    </style>
-
     <style name="Theme.FlatButtonTheme" parent="Widget.AppCompat.Button.Borderless">
         <item name="android:drawablePadding">8dp</item>
         <item name="android:paddingBottom">18dp</item>
@@ -84,11 +79,5 @@
         <item name="fontFamily">@font/roboto_bold</item>
         <item name="android:textSize">14sp</item>
     </style>
-
-    <style name="Theme.ToolbarActionPrimary" parent="Theme.CountersNormal">
-        <item name="actionMenuTextColor">?attr/colorPrimary</item>
-        <item name="android:actionMenuTextColor">?attr/colorPrimary</item>
-    </style>
-
 
 </resources>
