@@ -6,7 +6,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.WindowManager
-import android.widget.ProgressBar
 import androidx.activity.viewModels
 import com.cornershop.counterstest.R
 import com.cornershop.counterstest.core.BaseActivity
@@ -137,7 +136,7 @@ class CreateActivity : BaseActivity() {
                     }
                     CreateViewModelActions.HIDE_CREATING_LOADING -> {
                         with(binding.toolbar) {
-                            menu.getItem(0).setActionView(ProgressBar(this@CreateActivity))
+                            menu.findItem(R.id.save).setActionView(null)
                         }
                     }
                     CreateViewModelActions.NAVIGATE_BACK -> finish()
@@ -148,7 +147,7 @@ class CreateActivity : BaseActivity() {
                     }
                     CreateViewModelActions.SHOW_CREATING_LOADING -> {
                         with(binding.toolbar) {
-                            menu.getItem(0).setActionView(null)
+                            menu.findItem(R.id.save).setActionView(R.layout.toolbar_loader)
                         }
                     }
                     CreateViewModelActions.SHOW_NETWORK_ERROR -> print("network error")
