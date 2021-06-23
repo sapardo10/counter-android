@@ -8,7 +8,7 @@ import com.cornershop.data.models.Counter
 import com.cornershop.data.models.CounterError
 import com.cornershop.data.models.Result
 import com.cornershop.domain.IDecreaseCounterUseCase
-import com.cornershop.domain.IDeleteCounterUseCase
+import com.cornershop.domain.IDeleteMultipleCounterUseCase
 import com.cornershop.domain.IGetAllCountersUseCase
 import com.cornershop.domain.IIncreaseCounterUseCase
 import kotlinx.coroutines.Dispatchers
@@ -53,7 +53,7 @@ class MainListViewModelTest {
     private var mockDeletionModeObserver: Observer<Boolean> =
         mock(Observer::class.java) as Observer<Boolean>
     private val mockDecreaseCounterUseCase = mock(IDecreaseCounterUseCase::class.java)
-    private val mockDeleteCounterUseCase = mock(IDeleteCounterUseCase::class.java)
+    private val mockDeleteMultipleCounterUseCase = mock(IDeleteMultipleCounterUseCase::class.java)
     private val mockGetAllCountersUseCase = mock(IGetAllCountersUseCase::class.java)
     private val mockIncreaseCounterUseCase = mock(IIncreaseCounterUseCase::class.java)
 
@@ -63,7 +63,7 @@ class MainListViewModelTest {
         Dispatchers.setMain(testDispatcher)
         viewModel = MainListViewModel(
             decreaseCounterUseCase = mockDecreaseCounterUseCase,
-            deleteCounterUseCase = mockDeleteCounterUseCase,
+            deleteMultipleCounterUseCase = mockDeleteMultipleCounterUseCase,
             getAllCountersUseCase = mockGetAllCountersUseCase,
             increaseCounterUseCase = mockIncreaseCounterUseCase
         )
@@ -78,7 +78,7 @@ class MainListViewModelTest {
         verifyNoMoreInteractions(
             mockCountersObserver,
             mockDecreaseCounterUseCase,
-            mockDeleteCounterUseCase,
+            mockDeleteMultipleCounterUseCase,
             mockGetAllCountersUseCase,
             mockIncreaseCounterUseCase
         )
@@ -93,11 +93,15 @@ class MainListViewModelTest {
             val counter = Counter(1, "jdkfshas", "counter")
             viewModel.selectedCounters.add(counter)
 
-            `when`(mockDeleteCounterUseCase.invoke(counter)).thenReturn(Result.Failure(error = CounterError.NETWORK_ERROR))
+            `when`(mockDeleteMultipleCounterUseCase.invoke(listOf(counter))).thenReturn(
+                listOf(
+                    Result.Failure(error = CounterError.NETWORK_ERROR)
+                )
+            )
 
             viewModel.deleteItems()
 
-            verify(mockDeleteCounterUseCase).invoke(counter)
+            verify(mockDeleteMultipleCounterUseCase).invoke(listOf(counter))
             assertTrue(viewModel.selectedCounters.isNotEmpty())
             verify(
                 mockActionsObserver,
@@ -115,13 +119,14 @@ class MainListViewModelTest {
     fun `Delete items - success`() {
         runBlocking {
             val counter = Counter(1, "jdkfshas", "counter")
+            val list = listOf(counter)
             viewModel.selectedCounters.add(counter)
 
-            `when`(mockDeleteCounterUseCase.invoke(counter)).thenReturn(Result.Success(data = true))
+            `when`(mockDeleteMultipleCounterUseCase.invoke(list)).thenReturn(listOf())
 
             viewModel.deleteItems()
 
-            verify(mockDeleteCounterUseCase).invoke(counter)
+            verify(mockDeleteMultipleCounterUseCase).invoke(listOf())
             assertTrue(viewModel.selectedCounters.isEmpty())
             verify(mockDeletionModeObserver, times(2)).onChanged(false)
         }
