@@ -45,6 +45,11 @@
         <item name="backgroundTint">?attr/colorPrimary</item>
     </style>
 
+    <style name="Theme.EditText" parent="Theme.CountersNormal">
+        <item name="backgroundTint">?attr/colorPrimary</item>
+        <item name="android:backgroundTint">?attr/colorPrimary</item>
+    </style>
+
     <style name="Theme.FlatButtonTheme" parent="Widget.AppCompat.Button.Borderless">
         <item name="android:drawablePadding">8dp</item>
         <item name="android:paddingBottom">18dp</item>
@@ -67,6 +72,12 @@
         <item name="android:paddingBottom">18dp</item>
         <item name="android:drawableStart">@drawable/ic_search</item>
         <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="Theme.TextInputLayout" parent="Widget.Design.TextInputLayout">
+        <item name="colorControlNormal">?attr/colorPrimary</item>
+        <item name="colorControlActivated">?attr/colorPrimary</item>
+        <item name="colorControlHighlight">?attr/colorPrimary</item>
     </style>
 
     <style name="Theme.Text.SmallBold" parent="Theme.CountersNormal">

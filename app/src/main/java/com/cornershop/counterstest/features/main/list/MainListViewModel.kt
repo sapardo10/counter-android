@@ -53,6 +53,7 @@ class MainListViewModel @Inject constructor(
                     )
                 )
             } else {
+                selectedCounters.clear()
                 deletionMode.postValue(false)
             }
         }
@@ -85,10 +86,10 @@ class MainListViewModel @Inject constructor(
                             .let { data -> countersViewModel.postValue(data) }
                     }
                     else -> {
-                        if (countersViewModel.value?.isEmpty() == true) {
-                            actions.postValue(MainListViewModelActions.ShowNetworkError)
-                        } else {
+                        if (countersViewModel.value?.isNotEmpty() == true) {
                             actions.postValue(MainListViewModelActions.ShowNormalList)
+                        } else {
+                            actions.postValue(MainListViewModelActions.ShowNetworkError)
                         }
                         countersViewModel.postValue(listOf())
                     }

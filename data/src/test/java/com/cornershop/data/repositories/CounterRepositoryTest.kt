@@ -51,7 +51,7 @@ class CounterRepositoryTest {
     @Test
     fun `Decrease counter - service response is failure`() {
         runBlocking {
-            val counter = Counter(id = 1, count = 3, name = "counter")
+            val counter = Counter(id = "jdkfshas", count = 3, name = "counter")
 
             `when`(mockRemoteDataSource.decreaseCounter(counter)).thenReturn(Result.Failure(error = CounterError.NETWORK_ERROR))
 
@@ -66,7 +66,7 @@ class CounterRepositoryTest {
     @Test
     fun `Decrease counter - service response is successful`() {
         runBlocking {
-            val counter = Counter(id = 1, count = 3, name = "counter")
+            val counter = Counter(id = "jdkfshas", count = 3, name = "counter")
             val list = listOf<Counter>(counter)
 
             `when`(mockRemoteDataSource.decreaseCounter(counter)).thenReturn(Result.Success(data = list))
@@ -83,7 +83,7 @@ class CounterRepositoryTest {
     @Test
     fun `Delete counter - service response is failure`() {
         runBlocking {
-            val counter = Counter(id = 1, count = 3, name = "counter")
+            val counter = Counter(id = "jdkfshas", count = 3, name = "counter")
 
             `when`(mockRemoteDataSource.deleteCounter(counter)).thenReturn(Result.Failure(error = CounterError.NETWORK_ERROR))
 
@@ -98,7 +98,7 @@ class CounterRepositoryTest {
     @Test
     fun `Delete counter - service response is successful`() {
         runBlocking {
-            val counter = Counter(id = 1, count = 3, name = "counter")
+            val counter = Counter(id = "jdkfshas", count = 3, name = "counter")
             val list = listOf<Counter>(counter)
 
             `when`(mockRemoteDataSource.deleteCounter(counter)).thenReturn(Result.Success(data = list))
@@ -119,7 +119,7 @@ class CounterRepositoryTest {
     @Test
     fun `Increase counter - service response is failure`() {
         runBlocking {
-            val counter = Counter(id = 1, count = 3, name = "counter")
+            val counter = Counter(id = "jdkfshas", count = 3, name = "counter")
 
             `when`(mockRemoteDataSource.increaseCounter(counter)).thenReturn(Result.Failure(error = CounterError.NETWORK_ERROR))
 
@@ -134,7 +134,7 @@ class CounterRepositoryTest {
     @Test
     fun `Increase counter - service response is successful`() {
         runBlocking {
-            val counter = Counter(id = 1, count = 3, name = "counter")
+            val counter = Counter(id = "jdkfshas", count = 3, name = "counter")
             val list = listOf<Counter>(counter)
 
             `when`(mockRemoteDataSource.increaseCounter(counter)).thenReturn(Result.Success(data = list))

@@ -36,6 +36,10 @@ class MainActivity : BaseActivity() {
             setReorderingAllowed(true)
             add<MainLoadingFragment>(R.id.fragment_container_view)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
         viewModel.initializeView()
     }
 

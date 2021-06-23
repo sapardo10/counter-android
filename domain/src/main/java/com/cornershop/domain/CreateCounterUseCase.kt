@@ -1,6 +1,5 @@
 package com.cornershop.domain
 
-import com.cornershop.data.models.Counter
 import com.cornershop.data.models.Result
 import com.cornershop.data.repositories.ICounterRepository
 
@@ -11,10 +10,11 @@ interface ICreateCounterUseCase {
 
     /**
      * Invocation of the use case
-     * @return [Result] if success returns a [Counter] within. If failed it returns the failure
+     * @param title [String] name of the counter to be created
+     * @return [Result] if success returns a [Boolean] within. If failed it returns the failure
      * reason
      */
-    suspend operator fun invoke(): Result<Counter>
+    suspend operator fun invoke(title: String): Result<Boolean>
 }
 
 /**
@@ -23,8 +23,7 @@ interface ICreateCounterUseCase {
 class CreateCounterUseCase(
     private val counterRepository: ICounterRepository
 ) : ICreateCounterUseCase {
-    override suspend operator fun invoke(): Result<Counter> {
-        val result = counterRepository.createCounter()
-        return Result.Success(data = Counter(2, 1, "sadsad"))
+    override suspend operator fun invoke(title: String): Result<Boolean> {
+        return counterRepository.createCounter(title = title)
     }
 }

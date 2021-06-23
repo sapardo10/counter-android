@@ -10,6 +10,14 @@ import com.cornershop.data.models.Result
 interface ICounterRemoteDataSource {
 
     /**
+     * Method that calls the remote service to create a new counter
+     * @param title [String] of the counter to be created
+     * @return [Result.Success] if the operation was completed successfully with the list of counters,
+     * [Result.Failure] with the failure reason otherwise
+     */
+    suspend fun createCounter(title: String): Result<List<Counter>>
+
+    /**
      * Method that calls the remote service to decrease the count of a counter by one
      * @param counter [Counter] to be updated
      * @return [Result.Success] if the operation was completed successfully, [Result.Failure] with

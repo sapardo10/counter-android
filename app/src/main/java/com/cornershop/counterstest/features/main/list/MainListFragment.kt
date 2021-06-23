@@ -47,10 +47,10 @@ class MainListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initializeObservers()
-        viewModel.initializeView()
         initializeInteractionsListener()
         binding.swipeRefresh.setColorSchemeResources(R.color.orange)
         initializeToolbar()
+        viewModel.initializeView()
     }
 
     override fun onDestroyView() {
@@ -173,7 +173,7 @@ class MainListFragment : Fragment() {
             var count = 0
             for (viewModel in list) count += viewModel.counter.count
             nItemsLabel.text = resources.getQuantityString(R.plurals.n_items, list.size, list.size)
-            nTimesLabel.text = resources.getQuantityString(R.plurals.n_times, count)
+            nTimesLabel.text = resources.getQuantityString(R.plurals.n_times, count, count)
             binding.toolbar.title = resources.getQuantityString(
                 R.plurals.n_selected,
                 viewModel.selectedCounters.size,
