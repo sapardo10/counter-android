@@ -39,6 +39,15 @@ object UseCaseModule {
     }
 
     @Provides
+    fun provideDeleteMultipleCountesrUseCase(
+        counterRepository: ICounterRepository
+    ): IDeleteMultipleCounterUseCase {
+        return DeleteMultipleCounterUseCase(
+            counterRepository = counterRepository
+        )
+    }
+
+    @Provides
     fun provideGetAllCountersUseCase(
         counterRepository: ICounterRepository
     ): IGetAllCountersUseCase {

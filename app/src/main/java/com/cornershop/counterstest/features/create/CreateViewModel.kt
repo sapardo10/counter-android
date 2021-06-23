@@ -21,14 +21,12 @@ class CreateViewModel @Inject constructor(
 
     fun createCounter() {
         actions.postValue(CreateViewModelActions.SHOW_CREATING_LOADING)
-        if (newCounterTitle.isBlank()) {
-            actions.postValue(CreateViewModelActions.SHOW_COUNTER_EMPTY_ERROR)
-            viewModelScope.launch {
+        viewModelScope.launch {
+            if (newCounterTitle.isBlank()) {
+                actions.postValue(CreateViewModelActions.SHOW_COUNTER_EMPTY_ERROR)
                 delay(5000)
                 actions.postValue(CreateViewModelActions.HIDE_COUNTER_EMPTY_ERROR)
-            }
-        } else {
-            viewModelScope.launch {
+            } else {
                 when (val result = createCounterUseCase(title = newCounterTitle)) {
                     is Result.Success -> {
                         actions.postValue(CreateViewModelActions.NAVIGATE_BACK)
@@ -39,8 +37,9 @@ class CreateViewModel @Inject constructor(
                         }
                     }
                 }
-
             }
+            delay(100)
+            actions.postValue(CreateViewModelActions.HIDE_CREATING_LOADING)
         }
     }
 

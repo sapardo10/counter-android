@@ -6,6 +6,8 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.WindowManager
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView.OnEditorActionListener
 import androidx.activity.viewModels
 import com.cornershop.counterstest.R
 import com.cornershop.counterstest.core.BaseActivity
@@ -78,6 +80,13 @@ class CreateActivity : BaseActivity() {
             }
             requestFocus()
             window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+            setOnEditorActionListener(OnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    viewModel.createCounter()
+                    return@OnEditorActionListener true
+                }
+                false
+            })
         }
     }
 

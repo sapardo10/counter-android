@@ -93,11 +93,13 @@ class MainListFragment : Fragment() {
     private fun initializeObservers() {
         viewModel.countersViewModel.observe(viewLifecycleOwner, { list ->
             list?.let {
-                swipeRefresh.isRefreshing = false
-                updateList(
-                    deletionMode = viewModel.deletionMode.value == true,
-                    list = viewModel.countersViewModel.value
-                )
+                with(binding) {
+                    swipeRefresh.isRefreshing = false
+                    updateList(
+                        deletionMode = viewModel.deletionMode.value == true,
+                        list = viewModel.countersViewModel.value
+                    )
+                }
             }
         })
         viewModel.actions.observe(viewLifecycleOwner, {
