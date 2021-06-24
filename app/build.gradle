@@ -21,14 +21,14 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField "String", 'BASE_URL', "\"https://0a3b37c71443.ngrok.io/api/\""
+            buildConfigField "String", 'BASE_URL', "\"https://ddbfead0e013.ngrok.io/api/\""
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             ///Replace following line with production api
-            buildConfigField "String", 'BASE_URL', "\"https://0a3b37c71443.ngrok.io/api/\""
+            buildConfigField "String", 'BASE_URL', "\"https://ddbfead0e013.ngrok.io/api/\""
         }
     }
     compileOptions {

@@ -72,8 +72,8 @@ class MainListFragment : Fragment() {
      * Method that initializes the interactions the view can have
      */
     private fun initializeInteractionsListener() {
-        binding.searchEditText.isFocusable = false;
-        binding.searchEditText.isClickable = true;
+        binding.searchEditText.isFocusable = false
+        binding.searchEditText.isClickable = true
         binding.searchEditText.setOnClickListener {
             viewModel.viewState.postValue(MainViewState.SEARCH_STATE)
         }
@@ -112,13 +112,14 @@ class MainListFragment : Fragment() {
                         binding.failInternetConnectionGroup.visibility = View.VISIBLE
                     }
                     is MainListViewModelActions.ShowDialogUpdateNetworkError -> {
+
                         val dialog = activity?.buildDialog(
                             message = getString(R.string.connection_error_description),
                             negativeButtonText = getString(R.string.dismiss),
                             onPositiveClicked = action.retryAction,
                             positiveButtonText = getString(R.string.retry),
-                            title = getString(
-                                R.string.error_updating_counter_title,
+                            title = String.format(
+                                getString(R.string.error_updating_counter_title),
                                 action.counterName,
                                 action.counterNewValue
                             )
@@ -129,8 +130,8 @@ class MainListFragment : Fragment() {
                         val textToShareBuffer = StringBuffer()
                         for ((i, counter) in action.counters.withIndex()) {
                             textToShareBuffer.append(
-                                getString(
-                                    R.string.n_per_counter_name,
+                                String.format(
+                                    getString(R.string.n_per_counter_name),
                                     counter.count,
                                     counter.name
                                 )
