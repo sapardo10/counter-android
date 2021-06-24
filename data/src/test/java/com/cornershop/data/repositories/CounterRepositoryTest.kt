@@ -74,7 +74,7 @@ class CounterRepositoryTest {
             val result = counterRepository.decreaseCounter(counter)
 
             verify(mockRemoteDataSource).decreaseCounter(counter)
-            verify(mockLocalDataSource).setAll(list)
+            verify(mockLocalDataSource).setAllCounters(list)
             assertTrue(result is Result.Success)
             assertTrue((result as Result.Success).data)
         }
@@ -106,7 +106,7 @@ class CounterRepositoryTest {
             val result = counterRepository.deleteCounter(counter)
 
             verify(mockRemoteDataSource).deleteCounter(counter)
-            verify(mockLocalDataSource).delete(counter)
+            verify(mockLocalDataSource).deleteCounter(counter)
             assertTrue(result is Result.Success)
             assertTrue((result as Result.Success).data)
         }
@@ -142,7 +142,7 @@ class CounterRepositoryTest {
             val result = counterRepository.increaseCounter(counter)
 
             verify(mockRemoteDataSource).increaseCounter(counter)
-            verify(mockLocalDataSource).setAll(list)
+            verify(mockLocalDataSource).setAllCounters(list)
             assertTrue(result is Result.Success)
             assertTrue((result as Result.Success).data)
         }

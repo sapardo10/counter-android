@@ -4,6 +4,7 @@ import com.cornershop.data.datasources.ICounterLocalDataSource
 import com.cornershop.data.datasources.ICounterRemoteDataSource
 import com.cornershop.data.models.Counter
 import com.cornershop.data.models.Result
+import com.cornershop.data.models.SuggestionsCategory
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -25,7 +26,7 @@ class CounterRepository @Inject constructor(
     override suspend fun createCounter(title: String): Result<Boolean> {
         return when (val result = remoteDataSource.createCounter(title)) {
             is Result.Success -> {
-                localDataSource.setAll(result.data)
+                localDataSource.setAllCounters(result.data)
                 Result.Success(data = true)
             }
             is Result.Failure -> {
@@ -38,7 +39,7 @@ class CounterRepository @Inject constructor(
     override suspend fun decreaseCounter(counter: Counter): Result<Boolean> {
         return when (val result = remoteDataSource.decreaseCounter(counter)) {
             is Result.Success -> {
-                localDataSource.setAll(result.data)
+                localDataSource.setAllCounters(result.data)
                 Result.Success(data = true)
             }
             is Result.Failure -> {
@@ -51,7 +52,7 @@ class CounterRepository @Inject constructor(
     override suspend fun deleteCounter(counter: Counter): Result<Boolean> {
         return when (val result = remoteDataSource.deleteCounter(counter)) {
             is Result.Success -> {
-                localDataSource.delete(counter)
+                localDataSource.deleteCounter(counter)
                 Result.Success(data = true)
             }
             is Result.Failure -> {
@@ -63,24 +64,28 @@ class CounterRepository @Inject constructor(
     override suspend fun getAll(): Flow<Result<List<Counter>>> {
         return when (val remoteResponse = remoteDataSource.getAll()) {
             is Result.Success<List<Counter>> -> {
-                localDataSource.setAll(remoteResponse.data)
-                return localDataSource.getAll().map { list -> Result.Success(data = list) }
+                localDataSource.setAllCounters(remoteResponse.data)
+                return localDataSource.getAllCounters().map { list -> Result.Success(data = list) }
             }
             is Result.Failure<*> -> {
                 merge(
                     flow<Result<List<Counter>>> {
                         emit(remoteResponse)
                     },
-                    localDataSource.getAll().map { list -> Result.Success(data = list) }
+                    localDataSource.getAllCounters().map { list -> Result.Success(data = list) }
                 )
             }
         }
     }
 
+    override fun getAllCategorySuggestions(): List<SuggestionsCategory> {
+        return localDataSource.getAllCounterCategorySuggestions()
+    }
+
     override suspend fun increaseCounter(counter: Counter): Result<Boolean> {
         return when (val result = remoteDataSource.increaseCounter(counter)) {
             is Result.Success -> {
-                localDataSource.setAll(result.data)
+                localDataSource.setAllCounters(result.data)
                 Result.Success(data = true)
             }
             is Result.Failure -> {

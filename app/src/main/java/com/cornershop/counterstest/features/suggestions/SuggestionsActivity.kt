@@ -1,12 +1,15 @@
 package com.cornershop.counterstest.features.suggestions
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.cornershop.counterstest.R
 import com.cornershop.counterstest.core.BaseActivity
 import com.cornershop.counterstest.databinding.ActivitySuggestionsBinding
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class SuggestionsActivity : BaseActivity() {
@@ -24,6 +27,8 @@ class SuggestionsActivity : BaseActivity() {
         binding = ActivitySuggestionsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         configureToolbar()
+        configureList()
+        initializeObservers()
     }
 
     override fun finish() {
@@ -45,6 +50,16 @@ class SuggestionsActivity : BaseActivity() {
      * ------------------------------------- PRIVATE METHODS ---------------------------------------
      */
 
+    private fun configureList() {
+        with(binding.list) {
+            layoutManager = LinearLayoutManager(context)
+            adapter =
+                SuggestionsCategoryAdapter(
+                    viewModel.getSuggestionsCategoriesViewModels()
+                )
+        }
+    }
+
     /**
      * Method that configures all the icons, texts and interactions of the toolbar
      */
@@ -55,5 +70,28 @@ class SuggestionsActivity : BaseActivity() {
             supportActionBar?.setDisplayShowHomeEnabled(true)
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
         }
+    }
+
+    /**
+     * Method that initializes the observers over the view model attributes
+     */
+    private fun initializeObservers() {
+        viewModel.actions.observe(this, {
+            it?.let { action ->
+                when (action) {
+                    is SuggestionsViewModelActions.NavigateBack -> {
+                        val returnIntent = Intent()
+                        returnIntent.putExtra(SUGGESTION_NAME_KEY, action.suggestion.name)
+                        setResult(RESULT_OK, returnIntent)
+                        finish()
+                    }
+                }
+            }
+        })
+    }
+
+    companion object {
+        const val REQUEST_SUGGESTION = 1
+        const val SUGGESTION_NAME_KEY = "suggestion"
     }
 }

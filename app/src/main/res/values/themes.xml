@@ -20,6 +20,16 @@
 
     <!-- Screen theme -->
 
+    <style name="Theme.SecondaryListTitle" parent="Theme.CountersNormal">
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
+        <item name="android:textSize">16sp</item>
+        <item name="fontFamily">@font/roboto_bold</item>
+    </style>
+
+    <style name="Theme.ChipTheme" parent="Theme.CountersNormal">
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+    </style>
+
     <style name="Theme.CountersCreate" parent="Theme.CountersNormal">
         <item name="android:windowBackground">@color/welcome_background</item>
         <item name="android:actionMenuTextColor">?attr/colorPrimary</item>

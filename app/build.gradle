@@ -21,18 +21,14 @@ android {
 
     buildTypes {
         debug {
-            manifestPlaceholders = [usesCleartextTraffic: "true"]
-
-            buildConfigField "String", 'BASE_URL', "\"https://1c6ef1da9fe8.ngrok.io/api/\""
+            buildConfigField "String", 'BASE_URL', "\"https://0a3b37c71443.ngrok.io/api/\""
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
-            manifestPlaceholders = [usesCleartextTraffic: "false"]
-
             ///Replace following line with production api
-            buildConfigField "String", 'BASE_URL', "\"https://1c6ef1da9fe8.ngrok.io/api/\""
+            buildConfigField "String", 'BASE_URL', "\"https://0a3b37c71443.ngrok.io/api/\""
         }
     }
     compileOptions {

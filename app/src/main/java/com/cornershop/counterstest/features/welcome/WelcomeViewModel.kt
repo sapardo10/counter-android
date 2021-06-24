@@ -1,9 +1,9 @@
 package com.cornershop.counterstest.features.welcome
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cornershop.counterstest.session.IUserPreferencesHelper
+import com.cornershop.counterstest.utils.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -14,7 +14,7 @@ class WelcomeViewModel @Inject constructor(
     private val userPreferencesHelper: IUserPreferencesHelper
 ) : ViewModel() {
 
-    val actions = MutableLiveData<WelcomeViewModelActions>()
+    val actions = SingleLiveEvent<WelcomeViewModelActions>()
 
     /**
      * -------------------------------------- PUBLIC METHODS ---------------------------------------

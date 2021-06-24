@@ -50,6 +50,13 @@ class CreateViewModel @Inject constructor(
     fun onTextChanged(newText: String) {
         newCounterTitle = newText
     }
+
+    fun showSoftKeyboard() {
+        viewModelScope.launch {
+            delay(500)
+            actions.postValue(CreateViewModelActions.SHOW_SOFT_KEYBOARD)
+        }
+    }
 }
 
 enum class CreateViewModelActions {
@@ -59,5 +66,6 @@ enum class CreateViewModelActions {
     NAVIGATE_BACK,
     SHOW_COUNTER_EMPTY_ERROR,
     SHOW_CREATING_LOADING,
-    SHOW_NETWORK_ERROR
+    SHOW_NETWORK_ERROR,
+    SHOW_SOFT_KEYBOARD
 }
