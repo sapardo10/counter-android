@@ -16,6 +16,7 @@
 
         <!-- enable window content transitions -->
         <item name="android:windowActivityTransitions">true</item>
+        <item name="android:alertDialogTheme">@style/AlertDialogCustom</item>
     </style>
 
     <!-- Screen theme -->
@@ -48,6 +49,10 @@
     </style>
 
     <!-- Views theme -->
+    <style name="AlertDialogCustom" parent="android:Theme.Material.Light.Dialog.Alert">
+        <item name="android:colorAccent">?attr/colorPrimary</item>
+    </style>
+
     <style name="Theme.ButtonTheme" parent="Theme.CountersNormal">
         <item name="android:drawablePadding">8dp</item>
         <item name="android:paddingBottom">18dp</item>
