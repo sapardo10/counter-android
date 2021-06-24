@@ -3,7 +3,6 @@ package com.cornershop.counterstest.features.main.list
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.cornershop.counterstest.MainCoroutineRule
-import com.cornershop.counterstest.R
 import com.cornershop.data.models.Counter
 import com.cornershop.data.models.CounterError
 import com.cornershop.data.models.Result
@@ -50,8 +49,8 @@ class MainListViewModelTest {
         mock(Observer::class.java) as Observer<MainListViewModelActions>
     private var mockCountersObserver: Observer<List<CounterViewModel>> =
         mock(Observer::class.java) as Observer<List<CounterViewModel>>
-    private var mockDeletionModeObserver: Observer<Boolean> =
-        mock(Observer::class.java) as Observer<Boolean>
+    private var mockViewStateObserver: Observer<MainViewState> =
+        mock(Observer::class.java) as Observer<MainViewState>
     private val mockDecreaseCounterUseCase = mock(IDecreaseCounterUseCase::class.java)
     private val mockDeleteMultipleCounterUseCase = mock(IDeleteMultipleCounterUseCase::class.java)
     private val mockGetAllCountersUseCase = mock(IGetAllCountersUseCase::class.java)
@@ -69,7 +68,7 @@ class MainListViewModelTest {
         )
         viewModel.actions.observeForever(mockActionsObserver)
         viewModel.countersViewModel.observeForever(mockCountersObserver)
-        viewModel.viewState.observeForever(mockDeletionModeObserver)
+        viewModel.viewState.observeForever(mockViewStateObserver)
     }
 
     @ExperimentalCoroutinesApi
@@ -107,10 +106,7 @@ class MainListViewModelTest {
                 mockActionsObserver,
                 times(1)
             ).onChanged(
-                MainListViewModelActions.ShowDialogNetworkError(
-                    title = R.string.error_deleting_counter_title,
-                    message = R.string.connection_error_description
-                )
+                MainListViewModelActions.ShowDialogDeleteNetworkError
             )
         }
     }
@@ -128,7 +124,7 @@ class MainListViewModelTest {
 
             verify(mockDeleteMultipleCounterUseCase).invoke(listOf())
             assertTrue(viewModel.selectedCounters.isEmpty())
-            verify(mockDeletionModeObserver, times(2)).onChanged(false)
+            verify(mockViewStateObserver, times(2)).onChanged(MainViewState.NORMAL_STATE)
         }
     }
 
@@ -248,13 +244,13 @@ class MainListViewModelTest {
     fun `On item selection tapped - counter has been selected before and deletionMode is set to off`() {
         val counter = Counter(1, "jdkfshas", "counter")
         viewModel.selectedCounters.add(counter)
-        viewModel.viewState.value = true
+        viewModel.viewState.value = MainViewState.DELETE_STATE
 
         viewModel.onItemSelectionTapped(counter)
 
         assertEquals(0, viewModel.selectedCounters.size)
         verify(mockCountersObserver).onChanged(any())
-        verify(mockDeletionModeObserver, times(2)).onChanged(false)
+        verify(mockViewStateObserver, times(2)).onChanged(MainViewState.NORMAL_STATE)
     }
 
     @Test
@@ -263,11 +259,12 @@ class MainListViewModelTest {
         val counterTwo = Counter(2, "jdkfshas", "counter two")
         viewModel.selectedCounters.add(counter)
         viewModel.selectedCounters.add(counterTwo)
-        viewModel.viewState.value = true
+        viewModel.viewState.value = MainViewState.DELETE_STATE
 
         viewModel.onItemSelectionTapped(counter)
 
         assertEquals(1, viewModel.selectedCounters.size)
+        verify(mockViewStateObserver, times(2)).onChanged(MainViewState.DELETE_STATE)
         verify(mockCountersObserver).onChanged(any())
     }
 
@@ -275,11 +272,11 @@ class MainListViewModelTest {
     fun `On item selection tapped - counter has not been selected before and deletionMode is set to on`() {
         val counter = Counter(1, "jdkfshas", "counter")
         viewModel.selectedCounters.clear()
-        viewModel.viewState.value = false
+        viewModel.viewState.value = MainViewState.NORMAL_STATE
 
         viewModel.onItemSelectionTapped(counter)
 
-        verify(mockDeletionModeObserver, times(1)).onChanged(true)
+        verify(mockViewStateObserver).onChanged(MainViewState.DELETE_STATE)
         assertEquals(1, viewModel.selectedCounters.size)
         verify(mockCountersObserver).onChanged(any())
     }
