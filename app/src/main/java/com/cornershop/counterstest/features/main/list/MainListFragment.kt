@@ -12,6 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cornershop.counterstest.R
 import com.cornershop.counterstest.databinding.FragmentMainListBinding
+import com.cornershop.counterstest.utils.buildDialog
 import com.cornershop.counterstest.utils.setOnSingleClickListener
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -102,8 +103,8 @@ class MainListFragment : Fragment() {
                 }
             }
         })
-        viewModel.actions.observe(viewLifecycleOwner, {
-            it?.let { action ->
+        viewModel.actions.observe(viewLifecycleOwner, { nullableAction ->
+            nullableAction?.let { action ->
                 when (action) {
                     MainListViewModelActions.ShowNormalList -> {
                         binding.failInternetConnectionGroup.visibility = View.GONE
@@ -113,22 +114,76 @@ class MainListFragment : Fragment() {
                         binding.normalListGroup.visibility = View.GONE
                         binding.failInternetConnectionGroup.visibility = View.VISIBLE
                     }
-                    is MainListViewModelActions.ShowDialogNetworkError -> {
-                        //TODO: show network error on dialog
+                    is MainListViewModelActions.ShowDialogUpdateNetworkError -> {
+                        val dialog = activity?.buildDialog(
+                            message = getString(R.string.connection_error_description),
+                            negativeButtonText = getString(R.string.dismiss),
+                            onPositiveClicked = action.retryAction,
+                            positiveButtonText = getString(R.string.retry),
+                            title = getString(
+                                R.string.error_updating_counter_title,
+                                action.counterName,
+                                action.counterNewValue
+                            )
+                        )
+                        dialog?.show()
                     }
                     is MainListViewModelActions.ShowShareBottomSheet -> {
-                        val counterToShare = action.counter
+                        val textToShareBuffer = StringBuffer()
+                        for ((i, counter) in action.counters.withIndex()) {
+                            textToShareBuffer.append(
+                                getString(
+                                    R.string.n_per_counter_name,
+                                    counter.count,
+                                    counter.name
+                                )
+                            )
+                            if (i < action.counters.size - 1) {
+                                textToShareBuffer.append("\n")
+                            }
+                        }
                         val sendIntent: Intent = Intent().apply {
                             this.action = Intent.ACTION_SEND
                             putExtra(
                                 Intent.EXTRA_TEXT,
-                                "${counterToShare.count} x ${counterToShare.name}"
+                                textToShareBuffer.toString()
                             )
                             type = "text/plain"
                         }
 
                         val shareIntent = Intent.createChooser(sendIntent, null)
                         startActivity(shareIntent)
+                    }
+                    MainListViewModelActions.ShowDialogDeleteNetworkError -> {
+                        val dialog = activity?.buildDialog(
+                            message = getString(R.string.connection_error_description),
+                            negativeButtonText = getString(R.string.ok),
+                            title = getString(
+                                R.string.error_deleting_counter_title,
+                            )
+                        )
+                        dialog?.show()
+                    }
+                    is MainListViewModelActions.ShowDeleteRationaleDialog -> {
+                        val title = if (action.isBatchDelete) {
+                            resources.getQuantityString(
+                                R.plurals.delete_x_amount_of_counters_questions,
+                                action.countersAmount,
+                                action.countersAmount
+                            )
+                        } else {
+                            getString(
+                                R.string.delete_x_question,
+                                action.counterName
+                            )
+                        }
+                        val dialog = activity?.buildDialog(
+                            negativeButtonText = getString(R.string.cancel),
+                            title = title,
+                            onPositiveClicked = action.onConfirm,
+                            positiveButtonText = getString(R.string.delete),
+                        )
+                        dialog?.show()
                     }
                 }
             }
@@ -156,7 +211,7 @@ class MainListFragment : Fragment() {
         binding.toolbar.setNavigationOnClickListener { viewModel.deletionMode.postValue(false) }
         binding.toolbar.setOnMenuItemClickListener { menuItem ->
             if (menuItem.itemId == R.id.ic_delete) {
-                viewModel.deleteItems()
+                viewModel.showDeleteRationale()
             } else if (menuItem.itemId == R.id.ic_share) {
                 viewModel.shareItems()
             }

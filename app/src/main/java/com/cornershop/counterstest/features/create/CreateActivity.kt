@@ -20,6 +20,7 @@ import com.cornershop.counterstest.R
 import com.cornershop.counterstest.core.BaseActivity
 import com.cornershop.counterstest.databinding.ActivityCreateBinding
 import com.cornershop.counterstest.features.suggestions.SuggestionsActivity
+import com.cornershop.counterstest.utils.buildDialog
 import com.cornershop.counterstest.utils.insertLinks
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -156,8 +157,8 @@ class CreateActivity : BaseActivity() {
      * Method that initializes the observers over the live data on the view model
      */
     private fun initializeObservers() {
-        viewModel.actions.observe(this, {
-            it?.let { action ->
+        viewModel.actions.observe(this, { nullableAction ->
+            nullableAction?.let { action ->
                 when (action) {
                     CreateViewModelActions.GO_TO_EXAMPLES_SCREEN -> {
                         navigateToSuggestionsScreen()
@@ -183,7 +184,16 @@ class CreateActivity : BaseActivity() {
                             menu.findItem(R.id.save).setActionView(R.layout.toolbar_loader)
                         }
                     }
-                    CreateViewModelActions.SHOW_NETWORK_ERROR -> print("network error")
+                    CreateViewModelActions.SHOW_NETWORK_ERROR -> {
+                        val dialog = buildDialog(
+                            message = getString(R.string.connection_error_description),
+                            negativeButtonText = getString(R.string.ok),
+                            title = getString(
+                                R.string.error_creating_counter_title
+                            )
+                        )
+                        dialog.show()
+                    }
                     CreateViewModelActions.SHOW_SOFT_KEYBOARD -> {
                         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
                             val inputMethodManager: InputMethodManager =

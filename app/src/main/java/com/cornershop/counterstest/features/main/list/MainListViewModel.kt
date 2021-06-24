@@ -1,12 +1,11 @@
 package com.cornershop.counterstest.features.main.list
 
-import androidx.annotation.StringRes
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.cornershop.counterstest.R
 import com.cornershop.data.models.Counter
+import com.cornershop.data.models.CounterError
 import com.cornershop.data.models.Result
 import com.cornershop.domain.IDecreaseCounterUseCase
 import com.cornershop.domain.IDeleteMultipleCounterUseCase
@@ -39,6 +38,17 @@ class MainListViewModel @Inject constructor(
      * -------------------------------------- PUBLIC METHODS ---------------------------------------
      */
 
+    fun showDeleteRationale() {
+        actions.postValue(MainListViewModelActions.ShowDeleteRationaleDialog(
+            isBatchDelete = selectedCounters.size > 1,
+            counterName = selectedCounters.firstOrNull()?.name ?: "",
+            countersAmount = selectedCounters.size,
+            onConfirm = {
+                deleteItems()
+            }
+        ))
+    }
+
     /**
      * Method that deletes the items selected by the user
      */
@@ -50,10 +60,7 @@ class MainListViewModel @Inject constructor(
                 deletionMode.postValue(false)
             } else {
                 actions.postValue(
-                    MainListViewModelActions.ShowDialogNetworkError(
-                        title = R.string.error_deleting_counter_title,
-                        message = R.string.connection_error_description
-                    )
+                    MainListViewModelActions.ShowDialogDeleteNetworkError
                 )
             }
         }
@@ -115,9 +122,7 @@ class MainListViewModel @Inject constructor(
      */
     fun shareItems() {
         actions.postValue(
-            selectedCounters.firstOrNull()?.let {
-                MainListViewModelActions.ShowShareBottomSheet(counter = it)
-            }
+            MainListViewModelActions.ShowShareBottomSheet(counters = selectedCounters)
         )
     }
 
@@ -158,7 +163,18 @@ class MainListViewModel @Inject constructor(
      */
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun onItemMinusTap(counter: Counter) {
-        viewModelScope.launch { decreaseCounterUseCase(counterToDecrement = counter) }
+        viewModelScope.launch {
+            val result = decreaseCounterUseCase(counterToDecrement = counter)
+            if (result is Result.Failure && result.error == CounterError.NETWORK_ERROR) {
+                actions.postValue(MainListViewModelActions.ShowDialogUpdateNetworkError(
+                    counterName = counter.name,
+                    counterNewValue = counter.count - 1,
+                    retryAction = {
+                        onItemPlusTap(counter)
+                    }
+                ))
+            }
+        }
     }
 
     /**
@@ -178,7 +194,18 @@ class MainListViewModel @Inject constructor(
      */
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun onItemPlusTap(counter: Counter) {
-        viewModelScope.launch { increaseCounterUseCase(counterToIncrement = counter) }
+        viewModelScope.launch {
+            val result = increaseCounterUseCase(counterToIncrement = counter)
+            if (result is Result.Failure && result.error == CounterError.NETWORK_ERROR) {
+                actions.postValue(MainListViewModelActions.ShowDialogUpdateNetworkError(
+                    counterName = counter.name,
+                    counterNewValue = counter.count + 1,
+                    retryAction = {
+                        onItemPlusTap(counter)
+                    }
+                ))
+            }
+        }
     }
 
     /**
@@ -202,10 +229,19 @@ class MainListViewModel @Inject constructor(
 sealed class MainListViewModelActions {
     object ShowNormalList : MainListViewModelActions()
     object ShowNetworkError : MainListViewModelActions()
-    data class ShowDialogNetworkError(
-        @StringRes val title: Int,
-        @StringRes val message: Int
+    object ShowDialogDeleteNetworkError : MainListViewModelActions()
+    data class ShowDialogUpdateNetworkError(
+        val counterName: String,
+        val counterNewValue: Int,
+        val retryAction: () -> Unit
     ) : MainListViewModelActions()
 
-    data class ShowShareBottomSheet(val counter: Counter) : MainListViewModelActions()
+    data class ShowDeleteRationaleDialog(
+        val isBatchDelete: Boolean,
+        val counterName: String,
+        val countersAmount: Int,
+        val onConfirm: () -> Unit
+    ) : MainListViewModelActions()
+
+    data class ShowShareBottomSheet(val counters: List<Counter>) : MainListViewModelActions()
 }

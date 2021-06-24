@@ -1,5 +1,7 @@
 package com.cornershop.counterstest.utils
 
+import android.app.Activity
+import android.app.AlertDialog
 import android.text.*
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
@@ -7,6 +9,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.cornershop.counterstest.R
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
@@ -99,4 +102,35 @@ fun TextView.insertLinks(vararg links: Pair<String, View.OnClickListener>) {
     }
     this.movementMethod = LinkMovementMethod.getInstance()
     this.setText(spannableString, TextView.BufferType.SPANNABLE)
+}
+
+fun Activity.buildDialog(
+    message: String = "",
+    negativeButtonText: String = "",
+    onPositiveClicked: (() -> Unit)? = null,
+    positiveButtonText: String = "",
+    title: String = ""
+): AlertDialog {
+    val builder: AlertDialog.Builder = AlertDialog.Builder(this, R.style.AlertDialogCustom)
+
+    if (message.isNotBlank()) {
+        builder.setMessage(message)
+    }
+
+    if (title.isNotBlank()) {
+        builder.setTitle(title)
+    }
+
+    if (positiveButtonText.isNotBlank() && onPositiveClicked != null) {
+        builder.setPositiveButton(positiveButtonText) { _, _ ->
+            onPositiveClicked()
+        }
+    }
+
+    if (negativeButtonText.isNotBlank()) {
+        builder.setNegativeButton(negativeButtonText) { dialog, _ ->
+            dialog.dismiss()
+        }
+    }
+    return builder.create()
 }
