@@ -1,9 +1,12 @@
 package com.cornershop.counterstest.features.welcome
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.cornershop.counterstest.session.IUserPreferencesHelper
+import com.cornershop.counterstest.utils.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -11,7 +14,7 @@ class WelcomeViewModel @Inject constructor(
     private val userPreferencesHelper: IUserPreferencesHelper
 ) : ViewModel() {
 
-    val actions = MutableLiveData<WelcomeViewModelActions>()
+    val actions = SingleLiveEvent<WelcomeViewModelActions>()
 
     /**
      * -------------------------------------- PUBLIC METHODS ---------------------------------------
@@ -22,9 +25,15 @@ class WelcomeViewModel @Inject constructor(
      * 1. It checks if the user has already seen the welcome screen
      */
     fun initializeView() {
-        val userHasSeenWelcomeScreenBefore = userPreferencesHelper.hasUserSeenWelcomeScreenBefore()
-        if (userHasSeenWelcomeScreenBefore) {
-            actions.postValue(WelcomeViewModelActions.GO_TO_MAIN_SCREEN)
+        viewModelScope.launch {
+            delay(500)
+            val userHasSeenWelcomeScreenBefore =
+                userPreferencesHelper.hasUserSeenWelcomeScreenBefore()
+            if (userHasSeenWelcomeScreenBefore) {
+                actions.postValue(WelcomeViewModelActions.GO_TO_MAIN_SCREEN)
+            } else {
+                actions.postValue(WelcomeViewModelActions.SHOW_VIEWS)
+            }
         }
     }
 
@@ -39,5 +48,6 @@ class WelcomeViewModel @Inject constructor(
 }
 
 enum class WelcomeViewModelActions {
-    GO_TO_MAIN_SCREEN
+    GO_TO_MAIN_SCREEN,
+    SHOW_VIEWS
 }

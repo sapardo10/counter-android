@@ -18,6 +18,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <include
+        android:visibility="gone"
         android:id="@+id/welcome_content"
         layout="@layout/layout_welcome_content"
         android:layout_width="0dp"

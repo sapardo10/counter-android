@@ -1,17 +1,25 @@
 package com.cornershop.counterstest.features.create
 
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
 import android.widget.TextView.OnEditorActionListener
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import com.cornershop.counterstest.R
 import com.cornershop.counterstest.core.BaseActivity
 import com.cornershop.counterstest.databinding.ActivityCreateBinding
+import com.cornershop.counterstest.features.suggestions.SuggestionsActivity
 import com.cornershop.counterstest.utils.insertLinks
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -22,6 +30,16 @@ class CreateActivity : BaseActivity() {
     private val viewModel: CreateViewModel by viewModels()
 
     private lateinit var binding: ActivityCreateBinding
+
+    private val startForResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val intent = result.data
+                val name = intent?.getStringExtra(SuggestionsActivity.SUGGESTION_NAME_KEY) ?: ""
+                binding.textField.setText(name, TextView.BufferType.EDITABLE)
+                requestFocusTextField()
+            }
+        }
 
     /**
      * ------------------------------------ LIFECYCLE METHODS --------------------------------------
@@ -108,6 +126,10 @@ class CreateActivity : BaseActivity() {
         }
     }
 
+    /**
+     * Method that returns a [TextWatcher] to implement on the texfield to listen to the changes
+     * of it to create a new counter
+     */
     private fun getTextWatcher(): TextWatcher {
         return object : TextWatcher {
             override fun beforeTextChanged(
@@ -137,7 +159,9 @@ class CreateActivity : BaseActivity() {
         viewModel.actions.observe(this, {
             it?.let { action ->
                 when (action) {
-                    CreateViewModelActions.GO_TO_EXAMPLES_SCREEN -> print("Examples screen")
+                    CreateViewModelActions.GO_TO_EXAMPLES_SCREEN -> {
+                        navigateToSuggestionsScreen()
+                    }
                     CreateViewModelActions.HIDE_COUNTER_EMPTY_ERROR -> {
                         with(binding.textField) {
                             error = null
@@ -160,8 +184,35 @@ class CreateActivity : BaseActivity() {
                         }
                     }
                     CreateViewModelActions.SHOW_NETWORK_ERROR -> print("network error")
+                    CreateViewModelActions.SHOW_SOFT_KEYBOARD -> {
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                            val inputMethodManager: InputMethodManager =
+                                getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
+                            inputMethodManager.showSoftInput(
+                                binding.textField,
+                                InputMethodManager.SHOW_IMPLICIT
+                            );
+                        }
+
+                    }
                 }
             }
         })
+    }
+
+    /**
+     * Method that directs the user to the suggestions screen
+     */
+    private fun navigateToSuggestionsScreen() {
+        startForResult.launch(Intent(this, SuggestionsActivity::class.java))
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right)
+    }
+
+    /**
+     * Method that request the focus for the text field on the screen
+     */
+    private fun requestFocusTextField() {
+        viewModel.showSoftKeyboard()
     }
 }

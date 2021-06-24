@@ -2,7 +2,9 @@ package com.cornershop.counterstest.features.welcome
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
+import com.cornershop.counterstest.R
 import com.cornershop.counterstest.core.BaseActivity
 import com.cornershop.counterstest.databinding.ActivityWelcomeBinding
 import com.cornershop.counterstest.features.main.MainActivity
@@ -30,6 +32,11 @@ class WelcomeActivity : BaseActivity() {
         viewModel.initializeView()
     }
 
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right)
+    }
+
     /**
      * -------------------------------------- PRIVATE METHODS ---------------------------------------
      */
@@ -51,6 +58,8 @@ class WelcomeActivity : BaseActivity() {
             it?.let { action ->
                 when (action) {
                     WelcomeViewModelActions.GO_TO_MAIN_SCREEN -> navigateToMainScreen()
+                    WelcomeViewModelActions.SHOW_VIEWS -> binding.welcomeContent.root.visibility =
+                        View.VISIBLE
                 }
             }
         })
@@ -62,6 +71,7 @@ class WelcomeActivity : BaseActivity() {
     private fun navigateToMainScreen() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right)
         finish()
     }
 

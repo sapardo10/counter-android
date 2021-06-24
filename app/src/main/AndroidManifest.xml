@@ -15,6 +15,7 @@
         android:theme="@style/Theme.CountersNormal">
         <activity
             android:name="com.cornershop.counterstest.features.welcome.WelcomeActivity"
+            android:configChanges="uiMode"
             android:theme="@style/Theme.CountersWelcome">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,11 +26,18 @@
 
         <activity
             android:name=".features.main.MainActivity"
+            android:configChanges="uiMode"
             android:theme="@style/Theme.CountersMain" />
 
         <activity
             android:name=".features.create.CreateActivity"
+            android:configChanges="uiMode"
             android:theme="@style/Theme.CountersCreate" />
+
+        <activity
+            android:name=".features.suggestions.SuggestionsActivity"
+            android:configChanges="uiMode"
+            android:theme="@style/Theme.CountersSuggestions" />
     </application>
 
 </manifest>

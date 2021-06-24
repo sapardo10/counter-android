@@ -1,16 +1,19 @@
 <resources>
     <!-- Examples -->
+    <string name="drinks">Drinks</string>
     <string-array name="drinks_array">
         <item>Cups of coffee</item>
         <item>Glasses of water</item>
         <item>Tequila shots</item>
         <item>Caipirinhas</item>
     </string-array>
+    <string name="food">Food</string>
     <string-array name="food_array">
         <item>Hot-dogs</item>
         <item>Cupcakes eaten</item>
         <item>Chicken sandwich</item>
     </string-array>
+    <string name="misc">Misc</string>
     <string-array name="misc_array">
         <item>Times sneezed</item>
         <item>Naps</item>

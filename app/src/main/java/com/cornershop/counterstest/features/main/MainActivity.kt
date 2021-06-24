@@ -43,6 +43,11 @@ class MainActivity : BaseActivity() {
         viewModel.initializeView()
     }
 
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left)
+    }
+
     /**
      * -------------------------------------- PRIVATE METHODS --------------------------------------
      */

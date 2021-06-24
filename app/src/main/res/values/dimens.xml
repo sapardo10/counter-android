@@ -3,8 +3,22 @@
     <dimen name="welcome_logo_size">200dp</dimen>
     <dimen name="margin_big_2">90dp</dimen>
     <dimen name="margin_big_1">60dp</dimen>
-    <dimen name="margin_normal_1">16dp</dimen>
-    <dimen name="margin_normal_2">24dp</dimen>
-    <dimen name="margin_normal_3">32dp</dimen>
+    <dimen name="margin_normal_1">6dp</dimen>
+    <dimen name="margin_normal_2">8dp</dimen>
+    <dimen name="margin_normal_3">16dp</dimen>
+    <dimen name="margin_normal_4">24dp</dimen>
+    <dimen name="margin_normal_5">32dp</dimen>
+
+    <dimen name="padding_normal_1">6dp</dimen>
+    <dimen name="padding_normal_2">8dp</dimen>
+    <dimen name="padding_normal_3">10dp</dimen>
+    <dimen name="padding_normal_4">12dp</dimen>
+    <dimen name="padding_normal_5">16dp</dimen>
+
+    <dimen name="radius_normal_1">12dp</dimen>
+    <dimen name="radius_normal_2">18dp</dimen>
+    <dimen name="radius_normal_3">24dp</dimen>
+    <dimen name="radius_normal_4">32dp</dimen>
+
     <dimen name="text_margin">16dp</dimen>
 </resources>

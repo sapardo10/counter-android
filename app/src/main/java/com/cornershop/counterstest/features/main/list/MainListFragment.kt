@@ -197,7 +197,7 @@ class MainListFragment : Fragment() {
             deletionMode = deletionMode,
             filteredList
         )
-        updateLabels(finalList)
+        updateLabels(filteredList)
     }
 
     companion object {

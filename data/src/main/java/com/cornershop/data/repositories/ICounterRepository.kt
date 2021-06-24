@@ -3,6 +3,7 @@ package com.cornershop.data.repositories
 import com.cornershop.data.models.Counter
 import com.cornershop.data.models.CounterError
 import com.cornershop.data.models.Result
+import com.cornershop.data.models.SuggestionsCategory
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -37,6 +38,12 @@ interface ICounterRepository {
      * @return If success, [List] of [Counter]. If failure, a [CounterError]
      */
     suspend fun getAll(): Flow<Result<List<Counter>>>
+
+    /**
+     * Method that returns all the category suggestions for counters
+     * @return [List] of [SuggestionsCategory] available
+     */
+    fun getAllCategorySuggestions(): List<SuggestionsCategory>
 
     /**
      * Method that increases by one the count of a counter
