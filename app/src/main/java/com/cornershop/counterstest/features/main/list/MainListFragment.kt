@@ -1,12 +1,16 @@
 package com.cornershop.counterstest.features.main.list
 
+import android.app.SearchManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -38,7 +42,7 @@ class MainListFragment : Fragment() {
             layoutManager = LinearLayoutManager(context)
             adapter =
                 CounterListRecyclerViewAdapter(
-                    deletionMode = viewModel.deletionMode.value == true,
+                    deletionMode = viewModel.viewState.value == MainViewState.DELETE_STATE,
                     listOf()
                 )
         }
@@ -50,14 +54,15 @@ class MainListFragment : Fragment() {
         initializeObservers()
         initializeInteractionsListener()
         binding.swipeRefresh.setColorSchemeResources(R.color.orange)
-        initializeToolbar()
         viewModel.initializeView()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    override fun onStart() {
+        super.onStart()
+        viewModel.onSearchTextChanged("")
+        viewModel.closeDeleteToolbar()
     }
+
 
     /**
      * -------------------------------------- PRIVATE METHODS --------------------------------------
@@ -67,19 +72,11 @@ class MainListFragment : Fragment() {
      * Method that initializes the interactions the view can have
      */
     private fun initializeInteractionsListener() {
-        binding.searchEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                ///Do nothing, it does not interest the application so far
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                viewModel.onSearchTextChanged(newText = s.toString())
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                ///Do nothing, it does not interest the application so far
-            }
-        })
+        binding.searchEditText.isFocusable = false;
+        binding.searchEditText.isClickable = true;
+        binding.searchEditText.setOnClickListener {
+            viewModel.viewState.postValue(MainViewState.SEARCH_STATE)
+        }
         binding.swipeRefresh.setOnRefreshListener {
             viewModel.initializeView()
         }
@@ -97,7 +94,7 @@ class MainListFragment : Fragment() {
                 with(binding) {
                     swipeRefresh.isRefreshing = false
                     updateList(
-                        deletionMode = viewModel.deletionMode.value == true,
+                        deletionMode = viewModel.viewState.value == MainViewState.DELETE_STATE,
                         list = viewModel.countersViewModel.value
                     )
                 }
@@ -188,27 +185,57 @@ class MainListFragment : Fragment() {
                 }
             }
         })
-        viewModel.deletionMode.observe(viewLifecycleOwner, {
-            it?.let { deletionMode ->
-                with(binding) {
-                    searchEditText.visibility = if (deletionMode) View.GONE else View.VISIBLE
-                    toolbar.visibility = if (deletionMode) View.VISIBLE else View.GONE
-                    updateList(
-                        deletionMode = deletionMode,
-                        list = viewModel.countersViewModel.value
-                    )
+        viewModel.viewState.observe(viewLifecycleOwner, {
+            it?.let { viewState ->
+                when (viewState) {
+                    MainViewState.NORMAL_STATE -> {
+                        binding.toolbar.visibility = View.GONE
+                        binding.searchEditText.visibility = View.VISIBLE
+                        binding.searchEditText.setText(
+                            viewModel.searchText,
+                            TextView.BufferType.EDITABLE
+                        )
+
+                        updateList(
+                            deletionMode = viewState == MainViewState.DELETE_STATE,
+                            list = viewModel.countersViewModel.value
+                        )
+                    }
+                    MainViewState.DELETE_STATE -> {
+                        initializeDeleteToolbar()
+                        binding.toolbar.visibility = View.VISIBLE
+                        binding.searchEditText.visibility = View.GONE
+
+
+                        updateList(
+                            deletionMode = viewState == MainViewState.DELETE_STATE,
+                            list = viewModel.countersViewModel.value
+                        )
+                    }
+                    MainViewState.SEARCH_STATE -> {
+                        initializeSearchToolbar()
+                        binding.toolbar.visibility = View.VISIBLE
+                        binding.searchEditText.visibility = View.GONE
+
+                    }
                 }
             }
         })
     }
 
+    private fun showInputMethod(view: View) {
+        val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager?
+        imm?.showSoftInput(view, 0)
+    }
+
     /**
      * Method that initializes the toolbar of the delete mode
      */
-    private fun initializeToolbar() {
+    private fun initializeDeleteToolbar() {
+        binding.toolbar.menu.clear()
         binding.toolbar.inflateMenu(R.menu.toolbar_delete_mode)
         binding.toolbar.setNavigationIcon(R.drawable.ic_close)
-        binding.toolbar.setNavigationOnClickListener { viewModel.deletionMode.postValue(false) }
+        binding.toolbar.setNavigationOnClickListener { viewModel.closeDeleteToolbar() }
         binding.toolbar.setOnMenuItemClickListener { menuItem ->
             if (menuItem.itemId == R.id.ic_delete) {
                 viewModel.showDeleteRationale()
@@ -217,6 +244,44 @@ class MainListFragment : Fragment() {
             }
             return@setOnMenuItemClickListener true
         }
+    }
+
+    /**
+     * Method that initializes the toolbar of the delete mode
+     */
+    private fun initializeSearchToolbar() {
+        binding.toolbar.menu.clear()
+        binding.toolbar.inflateMenu(R.menu.toolbar_search_mode)
+        binding.toolbar.title = ""
+        binding.toolbar.setNavigationIcon(androidx.appcompat.R.drawable.abc_ic_ab_back_material)
+        binding.toolbar.setNavigationOnClickListener { viewModel.closeDeleteToolbar() }
+        val menu: Menu = binding.toolbar.menu
+        val searchManager: SearchManager? =
+            context?.getSystemService(Context.SEARCH_SERVICE) as? SearchManager
+        val searchView: SearchView = menu.findItem(R.id.menu_search).actionView as SearchView
+        searchView.setQuery(viewModel.searchText, false)
+        searchView.queryHint = getString(R.string.search_counters)
+        searchView.setIconifiedByDefault(false)
+        searchView.setOnQueryTextFocusChangeListener { view, hasFocus ->
+            if (hasFocus) {
+                showInputMethod(view.findFocus())
+            }
+        }
+        searchView.setSearchableInfo(searchManager!!.getSearchableInfo(activity?.componentName))
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return true
+            }
+
+            override fun onQueryTextChange(query: String?): Boolean {
+                if (query != null) {
+                    viewModel.onSearchTextChanged(query)
+                }
+                return true
+            }
+        })
+
+        searchView.requestFocus()
     }
 
     /**

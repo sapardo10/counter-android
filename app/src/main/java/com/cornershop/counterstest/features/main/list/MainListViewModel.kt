@@ -26,7 +26,7 @@ class MainListViewModel @Inject constructor(
 
     val actions = MutableLiveData<MainListViewModelActions>()
     val countersViewModel = MutableLiveData<List<CounterViewModel>>()
-    var deletionMode = MutableLiveData(false)
+    var viewState = MutableLiveData(MainViewState.NORMAL_STATE)
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     var searchText: String = ""
@@ -37,6 +37,11 @@ class MainListViewModel @Inject constructor(
     /**
      * -------------------------------------- PUBLIC METHODS ---------------------------------------
      */
+
+    fun closeDeleteToolbar() {
+        selectedCounters.clear()
+        viewState.postValue(MainViewState.NORMAL_STATE)
+    }
 
     fun showDeleteRationale() {
         actions.postValue(MainListViewModelActions.ShowDeleteRationaleDialog(
@@ -57,7 +62,7 @@ class MainListViewModel @Inject constructor(
             val deletionFailures = deleteMultipleCounterUseCase(selectedCounters)
             if (deletionFailures.isEmpty()) {
                 selectedCounters.clear()
-                deletionMode.postValue(false)
+                viewState.postValue(MainViewState.NORMAL_STATE)
             } else {
                 actions.postValue(
                     MainListViewModelActions.ShowDialogDeleteNetworkError
@@ -184,7 +189,7 @@ class MainListViewModel @Inject constructor(
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun onItemLongTap(counter: Counter) {
         selectedCounters.add(counter)
-        deletionMode.postValue(deletionMode.value != true)
+        viewState.postValue(MainViewState.DELETE_STATE)
         countersViewModel.postValue(countersViewModel.value)
     }
 
@@ -220,8 +225,12 @@ class MainListViewModel @Inject constructor(
         } else {
             selectedCounters.add(counter)
         }
-
-        deletionMode.postValue(selectedCounters.isNotEmpty())
+        val state = if (selectedCounters.isNotEmpty()) {
+            MainViewState.DELETE_STATE
+        } else {
+            MainViewState.NORMAL_STATE
+        }
+        viewState.postValue(state)
         countersViewModel.postValue(countersViewModel.value)
     }
 }
@@ -244,4 +253,10 @@ sealed class MainListViewModelActions {
     ) : MainListViewModelActions()
 
     data class ShowShareBottomSheet(val counters: List<Counter>) : MainListViewModelActions()
+}
+
+enum class MainViewState {
+    NORMAL_STATE,
+    DELETE_STATE,
+    SEARCH_STATE
 }

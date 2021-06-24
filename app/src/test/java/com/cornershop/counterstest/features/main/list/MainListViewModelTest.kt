@@ -69,7 +69,7 @@ class MainListViewModelTest {
         )
         viewModel.actions.observeForever(mockActionsObserver)
         viewModel.countersViewModel.observeForever(mockCountersObserver)
-        viewModel.deletionMode.observeForever(mockDeletionModeObserver)
+        viewModel.viewState.observeForever(mockDeletionModeObserver)
     }
 
     @ExperimentalCoroutinesApi
@@ -248,7 +248,7 @@ class MainListViewModelTest {
     fun `On item selection tapped - counter has been selected before and deletionMode is set to off`() {
         val counter = Counter(1, "jdkfshas", "counter")
         viewModel.selectedCounters.add(counter)
-        viewModel.deletionMode.value = true
+        viewModel.viewState.value = true
 
         viewModel.onItemSelectionTapped(counter)
 
@@ -263,7 +263,7 @@ class MainListViewModelTest {
         val counterTwo = Counter(2, "jdkfshas", "counter two")
         viewModel.selectedCounters.add(counter)
         viewModel.selectedCounters.add(counterTwo)
-        viewModel.deletionMode.value = true
+        viewModel.viewState.value = true
 
         viewModel.onItemSelectionTapped(counter)
 
@@ -275,7 +275,7 @@ class MainListViewModelTest {
     fun `On item selection tapped - counter has not been selected before and deletionMode is set to on`() {
         val counter = Counter(1, "jdkfshas", "counter")
         viewModel.selectedCounters.clear()
-        viewModel.deletionMode.value = false
+        viewModel.viewState.value = false
 
         viewModel.onItemSelectionTapped(counter)
 
