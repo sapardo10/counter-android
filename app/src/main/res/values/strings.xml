@@ -48,7 +48,6 @@
     <string name="error_updating_counter_title">Couldn’t update the “%s” counter to %d</string>
     <string name="error_deleting_counter_title">Couldn’t delete the counter</string>
     <string name="connection_error_description">The Internet connection appears to be offline.</string>
-    <string name="generic_error_description">There has been a problem.</string>
     <string name="retry">Retry</string>
     <string name="save">Save</string>
     <string name="ok">OK</string>
@@ -70,8 +69,6 @@
         <item quantity="other">Delete %d counters?</item>
     </plurals>
     <string name="n_per_counter_name">%d × %s</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="decrease_counter">Icon that decrements the counter in one</string>
     <string name="increase_counter">Icon that increases the counter by one</string>
     <string name="ic_description_selected_item">Icon that represents the item has been selected by the user</string>

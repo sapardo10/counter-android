@@ -69,7 +69,6 @@ class MainActivity : BaseActivity() {
             it?.let { action ->
                 when (action) {
                     is MainViewModelActions.GoToCreateScreen -> navigateToCreateScreen()
-                    is MainViewModelActions.ShowListCounterNoInternetConnectionDialog -> println("show list counter no internet connection dialog")
                     is MainViewModelActions.ShowEmptyState -> showEmptyState()
                     is MainViewModelActions.ShowListCounter -> showCounterList()
                 }

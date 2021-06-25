@@ -53,8 +53,8 @@ class CreateViewModelTest {
     @ExperimentalCoroutinesApi
     @After
     fun tearDown() {
-        Mockito.verifyNoMoreInteractions(mockActionsObserver)
-        Mockito.verifyNoMoreInteractions(mockCreateCounterUseCase)
+        verifyNoMoreInteractions(mockActionsObserver)
+        verifyNoMoreInteractions(mockCreateCounterUseCase)
 
         Dispatchers.resetMain()
         testDispatcher.cleanupTestCoroutines()

@@ -9,6 +9,10 @@ import com.cornershop.counterstest.R
 
 class MainEmptyStateFragment : Fragment() {
 
+    /**
+     * ------------------------------------ LIFECYCLE METHODS --------------------------------------
+     */
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

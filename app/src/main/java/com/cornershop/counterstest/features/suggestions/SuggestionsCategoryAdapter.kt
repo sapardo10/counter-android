@@ -5,10 +5,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cornershop.counterstest.databinding.SuggestionsCategoryItemBinding
+import com.cornershop.counterstest.utils.SpacesItemDecoration
 
 class SuggestionsCategoryAdapter(
     private val suggestionsCategories: List<CategorySuggestionViewModel>
 ) : RecyclerView.Adapter<SuggestionsCategoryAdapter.ViewHolder>() {
+
+    /**
+     * ------------------------------------- PUBLIC METHODS ----------------------------------------
+     */
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -30,11 +35,17 @@ class SuggestionsCategoryAdapter(
 
     override fun getItemCount(): Int = suggestionsCategories.size
 
+    /**
+     * [ViewHolder] from [SuggestionsCategoryAdapter]
+     */
     inner class ViewHolder(private val binding: SuggestionsCategoryItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
+        /**
+         * Method used when the view is being load with new information to set the necessary UI give
+         * the [CategorySuggestionViewModel]
+         */
         fun bind(item: CategorySuggestionViewModel) {
-
             with(binding) {
                 val context = root.context
                 categoryName.text = item.title

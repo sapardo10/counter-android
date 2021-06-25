@@ -49,9 +49,6 @@ class CounterRepositoryTest {
         runBlocking {
             val name = "counterName"
             val counter = Counter(1, "ashdakshjd", name)
-            val counterList = listOf<Counter>(
-                counter
-            )
 
             `when`(mockRemoteDataSource.createCounter(title = name)).thenReturn(
                 Result.Failure(error = CounterError.NETWORK_ERROR)
@@ -70,7 +67,7 @@ class CounterRepositoryTest {
         runBlocking {
             val name = "counterName"
             val counter = Counter(1, "ashdakshjd", name)
-            val counterList = listOf<Counter>(
+            val counterList = listOf(
                 counter
             )
 
@@ -224,7 +221,7 @@ class CounterRepositoryTest {
                     suggestion
                 )
             )
-            val categories = listOf<SuggestionsCategory>(counterCategorySuggestion)
+            val categories = listOf(counterCategorySuggestion)
 
             `when`(mockLocalDataSource.getAllCounterCategorySuggestions()).thenReturn(categories)
 

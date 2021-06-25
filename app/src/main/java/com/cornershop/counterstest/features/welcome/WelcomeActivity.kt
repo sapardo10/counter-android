@@ -45,7 +45,7 @@ class WelcomeActivity : BaseActivity() {
      * Method that initializes the interactions the view can have
      */
     private fun initializeInteractionsListener() {
-        binding.welcomeContent?.buttonStart?.setOnSingleClickListener {
+        binding.welcomeContent.buttonStart.setOnSingleClickListener {
             viewModel.onStartButtonTapped()
         }
     }

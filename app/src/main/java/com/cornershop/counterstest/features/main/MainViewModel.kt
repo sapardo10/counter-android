@@ -32,7 +32,7 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             getAllCountersUseCase().collect { result ->
                 when (result) {
-                    is Result.Success -> onCountersFetchedFailed(result.data)
+                    is Result.Success -> onCountersFetchedSucceeded(result.data)
                     is Result.Failure -> onCountersFetchedFailed(result.error)
                     else -> actions.postValue(MainViewModelActions.ShowEmptyState)
                 }
@@ -57,7 +57,7 @@ class MainViewModel @Inject constructor(
      */
     private fun onCountersFetchedFailed(error: CounterError) {
         if (error == CounterError.NETWORK_ERROR) {
-            actions.postValue(MainViewModelActions.ShowListCounterNoInternetConnectionDialog)
+            actions.postValue(MainViewModelActions.ShowListCounter)
         }
     }
 
@@ -65,7 +65,7 @@ class MainViewModel @Inject constructor(
      * Method called when the fetching of the counters was a success
      * @param list [List] of [Counter] of the application
      */
-    private fun onCountersFetchedFailed(list: List<Counter>?) {
+    private fun onCountersFetchedSucceeded(list: List<Counter>?) {
         if (list?.isEmpty() == true) {
             isShowingList = false
             actions.postValue(MainViewModelActions.ShowEmptyState)
@@ -82,5 +82,4 @@ sealed class MainViewModelActions {
     object GoToCreateScreen : MainViewModelActions()
     object ShowEmptyState : MainViewModelActions()
     object ShowListCounter : MainViewModelActions()
-    object ShowListCounterNoInternetConnectionDialog : MainViewModelActions()
 }
