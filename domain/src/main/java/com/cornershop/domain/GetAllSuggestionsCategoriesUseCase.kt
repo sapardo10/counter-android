@@ -24,6 +24,10 @@ class GetAllSuggestionsCategoriesUseCase @Inject constructor(
     private val counterRepository: ICounterRepository
 ) : IGetAllSuggestionsCategoriesUseCase {
 
+    /**
+     * -------------------------------------- PUBLIC METHODS ---------------------------------------
+     */
+
     override operator fun invoke(): List<SuggestionsCategory> {
         return counterRepository.getAllCategorySuggestions()
     }

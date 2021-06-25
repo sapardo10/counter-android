@@ -23,6 +23,11 @@ interface ICreateCounterUseCase {
 class CreateCounterUseCase(
     private val counterRepository: ICounterRepository
 ) : ICreateCounterUseCase {
+
+    /**
+     * -------------------------------------- PUBLIC METHODS ---------------------------------------
+     */
+
     override suspend operator fun invoke(title: String): Result<Boolean> {
         return counterRepository.createCounter(title = title)
     }
