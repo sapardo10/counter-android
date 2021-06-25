@@ -1,16 +1,19 @@
 <resources>
     <!-- Examples -->
+    <string name="drinks">Drinks</string>
     <string-array name="drinks_array">
         <item>Cups of coffee</item>
         <item>Glasses of water</item>
         <item>Tequila shots</item>
         <item>Caipirinhas</item>
     </string-array>
+    <string name="food">Food</string>
     <string-array name="food_array">
         <item>Hot-dogs</item>
         <item>Cupcakes eaten</item>
         <item>Chicken sandwich</item>
     </string-array>
+    <string name="misc">Misc</string>
     <string-array name="misc_array">
         <item>Times sneezed</item>
         <item>Naps</item>
@@ -28,15 +31,23 @@
 —Willie Nelson</string>
     <string name="search_counters">Search Counters</string>
     <string name="add_counters">Add counters</string>
-    <string name="n_items">%d items</string>
-    <string name="n_times">%d times</string>
-    <string name="n_selected">%d selected</string>
+    <plurals name="n_items">
+        <item quantity="one">%d item</item>
+        <item quantity="other">%d items</item>
+    </plurals>
+    <plurals name="n_times">
+        <item quantity="one">%d time</item>
+        <item quantity="other">%d times</item>
+    </plurals>
+    <plurals name="n_selected">
+        <item quantity="one">%d selected</item>
+        <item quantity="other">%d selected</item>
+    </plurals>
     <string name="error_load_counters_title">Couldn’t load the counters</string>
     <string name="error_creating_counter_title">Couldn’t create the counter</string>
     <string name="error_updating_counter_title">Couldn’t update the “%s” counter to %d</string>
     <string name="error_deleting_counter_title">Couldn’t delete the counter</string>
     <string name="connection_error_description">The Internet connection appears to be offline.</string>
-    <string name="generic_error_description">There has been a problem.</string>
     <string name="retry">Retry</string>
     <string name="save">Save</string>
     <string name="ok">OK</string>
@@ -49,7 +60,16 @@
     <string name="create_counter">Create counter</string>
     <string name="counter_name_label">Name</string>
     <string name="counter_name_hint">Cups of coffee</string>
+    <string name="create_counter_error_blank">Counter name cannot be empty</string>
     <string name="create_counter_disclaimer">Give it a name. Creative block? See examples.</string>
+    <string name="create_counter_disclaimer_text_link">examples.</string>
     <string name="delete_x_question">Delete "%s"?</string>
+    <plurals name="delete_x_amount_of_counters_questions">
+        <item quantity="one">Delete %d counter?</item>
+        <item quantity="other">Delete %d counters?</item>
+    </plurals>
     <string name="n_per_counter_name">%d × %s</string>
+    <string name="decrease_counter">Icon that decrements the counter in one</string>
+    <string name="increase_counter">Icon that increases the counter by one</string>
+    <string name="ic_description_selected_item">Icon that represents the item has been selected by the user</string>
 </resources>
