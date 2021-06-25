@@ -20,6 +20,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="@string/counter_name_label"
+        android:theme="@style/Theme.TextInputLayout"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -40,8 +41,9 @@
         android:id="@+id/help_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="@dimen/margin_normal_3"
         android:text="@string/create_counter_disclaimer"
+        android:textColor="@color/gray"
         app:layout_constraintEnd_toEndOf="@id/text_input_layout"
         app:layout_constraintStart_toStartOf="@id/text_input_layout"
         app:layout_constraintTop_toBottomOf="@id/text_input_layout" />

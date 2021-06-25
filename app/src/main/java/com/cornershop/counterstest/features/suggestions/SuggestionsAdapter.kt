@@ -10,6 +10,10 @@ class SuggestionsAdapter(
     val suggestions: List<SuggestionItemViewModel>
 ) : RecyclerView.Adapter<SuggestionsAdapter.ViewHolder>() {
 
+    /**
+     * ------------------------------------- PUBLIC METHODS ----------------------------------------
+     */
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemBinding =
             SuggestionItemBinding.inflate(
@@ -27,8 +31,16 @@ class SuggestionsAdapter(
 
     override fun getItemCount() = suggestions.size
 
+    /**
+     * [ViewHolder] from [SuggestionsAdapter]
+     */
     inner class ViewHolder(private val binding: SuggestionItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
+        /**
+         * Method used when the view is being load with new information to set the necessary UI give
+         * the [SuggestionItemViewModel]
+         */
         fun bind(item: SuggestionItemViewModel) {
             with(binding) {
                 root.text = item.name

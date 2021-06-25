@@ -1,4 +1,4 @@
-package com.cornershop.counterstest.features.suggestions
+package com.cornershop.counterstest.utils
 
 import android.graphics.Rect
 import android.view.View

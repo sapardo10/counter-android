@@ -91,7 +91,6 @@ class SuggestionsActivity : BaseActivity() {
     }
 
     companion object {
-        const val REQUEST_SUGGESTION = 1
         const val SUGGESTION_NAME_KEY = "suggestion"
     }
 }

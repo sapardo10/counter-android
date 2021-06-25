@@ -1,9 +1,8 @@
 package com.cornershop.counterstest.features.create
 
-
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -24,7 +23,6 @@ import com.cornershop.counterstest.utils.buildDialog
 import com.cornershop.counterstest.utils.insertLinks
 import dagger.hilt.android.AndroidEntryPoint
 
-
 @AndroidEntryPoint
 class CreateActivity : BaseActivity() {
 
@@ -32,12 +30,19 @@ class CreateActivity : BaseActivity() {
 
     private lateinit var binding: ActivityCreateBinding
 
+    /**
+     * Activity result launcher that will launch the [SuggestionsActivity] and wait for a response
+     * in which the user picked a suggestion
+     */
     private val startForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val intent = result.data
                 val name = intent?.getStringExtra(SuggestionsActivity.SUGGESTION_NAME_KEY) ?: ""
-                binding.textField.setText(name, TextView.BufferType.EDITABLE)
+                with(binding.textField) {
+                    setText(name, TextView.BufferType.EDITABLE)
+                    setSelection(name.length)
+                }
                 requestFocusTextField()
             }
         }
@@ -154,61 +159,48 @@ class CreateActivity : BaseActivity() {
     }
 
     /**
-     * Method that initializes the observers over the live data on the view model
+     * Method that hides the error shown on the text field
      */
-    private fun initializeObservers() {
+    private fun hideTextFieldError() {
+        with(binding.textField) {
+            error = null
+        }
+    }
+
+    /**
+     * Method that hides the loader shown on the toolbar
+     */
+    private fun hideToolbarLoader() {
+        with(binding.toolbar) {
+            menu.findItem(R.id.save).setActionView(null)
+        }
+    }
+
+    /**
+     * Method that initializes the observer over the actions on the view model
+     */
+    private fun initializeObserverOverActions() {
         viewModel.actions.observe(this, { nullableAction ->
             nullableAction?.let { action ->
                 when (action) {
-                    CreateViewModelActions.GO_TO_EXAMPLES_SCREEN -> {
-                        navigateToSuggestionsScreen()
-                    }
-                    CreateViewModelActions.HIDE_COUNTER_EMPTY_ERROR -> {
-                        with(binding.textField) {
-                            error = null
-                        }
-                    }
-                    CreateViewModelActions.HIDE_CREATING_LOADING -> {
-                        with(binding.toolbar) {
-                            menu.findItem(R.id.save).setActionView(null)
-                        }
-                    }
+                    CreateViewModelActions.GO_TO_EXAMPLES_SCREEN -> navigateToSuggestionsScreen()
+                    CreateViewModelActions.HIDE_COUNTER_EMPTY_ERROR -> hideTextFieldError()
+                    CreateViewModelActions.HIDE_CREATING_LOADING -> hideToolbarLoader()
                     CreateViewModelActions.NAVIGATE_BACK -> finish()
-                    CreateViewModelActions.SHOW_COUNTER_EMPTY_ERROR -> {
-                        with(binding.textField) {
-                            error = getString(R.string.create_counter_error_blank)
-                        }
-                    }
-                    CreateViewModelActions.SHOW_CREATING_LOADING -> {
-                        with(binding.toolbar) {
-                            menu.findItem(R.id.save).setActionView(R.layout.toolbar_loader)
-                        }
-                    }
-                    CreateViewModelActions.SHOW_NETWORK_ERROR -> {
-                        val dialog = buildDialog(
-                            message = getString(R.string.connection_error_description),
-                            negativeButtonText = getString(R.string.ok),
-                            title = getString(
-                                R.string.error_creating_counter_title
-                            )
-                        )
-                        dialog.show()
-                    }
-                    CreateViewModelActions.SHOW_SOFT_KEYBOARD -> {
-                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                            val inputMethodManager: InputMethodManager =
-                                getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-
-                            inputMethodManager.showSoftInput(
-                                binding.textField,
-                                InputMethodManager.SHOW_IMPLICIT
-                            );
-                        }
-
-                    }
+                    CreateViewModelActions.SHOW_COUNTER_EMPTY_ERROR -> showTextFieldError()
+                    CreateViewModelActions.SHOW_CREATING_LOADING -> showToolbarLoader()
+                    CreateViewModelActions.SHOW_NETWORK_ERROR -> showNetworkErrorDialog()
+                    CreateViewModelActions.SHOW_SOFT_KEYBOARD -> showSoftKeyboard()
                 }
             }
         })
+    }
+
+    /**
+     * Method that initializes the observers over the live data on the view model
+     */
+    private fun initializeObservers() {
+        initializeObserverOverActions()
     }
 
     /**
@@ -224,5 +216,53 @@ class CreateActivity : BaseActivity() {
      */
     private fun requestFocusTextField() {
         viewModel.showSoftKeyboard()
+    }
+
+    /**
+     * Method that builds and displays a dialog stating that the create action could not be complete
+     * due to network connection or errors.
+     */
+    private fun showNetworkErrorDialog() {
+        val dialog = buildDialog(
+            message = getString(R.string.connection_error_description),
+            negativeButtonText = getString(R.string.ok),
+            title = getString(
+                R.string.error_creating_counter_title
+            )
+        )
+        dialog.show()
+    }
+
+    /**
+     * Method that shows the soft keyboard to the user so it can input text on the text field
+     */
+    private fun showSoftKeyboard() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val inputMethodManager: InputMethodManager =
+                getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+
+            inputMethodManager.showSoftInput(
+                binding.textField,
+                InputMethodManager.SHOW_IMPLICIT
+            )
+        }
+    }
+
+    /**
+     * Method that displays the error on the text field
+     */
+    private fun showTextFieldError() {
+        with(binding.textField) {
+            error = getString(R.string.create_counter_error_blank)
+        }
+    }
+
+    /**
+     * Method that shows the loader placed on the toolbar
+     */
+    private fun showToolbarLoader() {
+        with(binding.toolbar) {
+            menu.findItem(R.id.save).setActionView(R.layout.toolbar_loader)
+        }
     }
 }

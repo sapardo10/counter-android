@@ -23,6 +23,11 @@ interface IGetAllCountersUseCase {
 class GetAllCountersUseCase(
     private val counterRepository: ICounterRepository
 ) : IGetAllCountersUseCase {
+
+    /**
+     * -------------------------------------- PUBLIC METHODS ---------------------------------------
+     */
+
     override suspend operator fun invoke(): Flow<Result<List<Counter>>> {
         return counterRepository.getAll()
     }

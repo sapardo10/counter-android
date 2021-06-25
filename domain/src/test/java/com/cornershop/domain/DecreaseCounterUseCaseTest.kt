@@ -16,7 +16,8 @@ class DecreaseCounterUseCaseTest {
 
     lateinit var useCase: IDecreaseCounterUseCase
 
-    private var mockCounterRepository: ICounterRepository = Mockito.mock(ICounterRepository::class.java)
+    private var mockCounterRepository: ICounterRepository =
+        Mockito.mock(ICounterRepository::class.java)
 
     @BeforeEach
     fun setUp() {

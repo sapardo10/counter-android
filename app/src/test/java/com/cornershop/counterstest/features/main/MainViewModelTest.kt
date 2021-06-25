@@ -4,7 +4,6 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.cornershop.counterstest.MainCoroutineRule
 import com.cornershop.counterstest.utils.SingleLiveEventObserver
 import com.cornershop.data.models.Counter
-import com.cornershop.data.models.CounterError
 import com.cornershop.data.models.Result
 import com.cornershop.domain.IGetAllCountersUseCase
 import kotlinx.coroutines.Dispatchers
@@ -96,21 +95,6 @@ class MainViewModelTest {
 
             verify(mockGetAllCountersUseCase).invoke()
             verify(mockActionsObserver).onChanged(MainViewModelActions.ShowEmptyState)
-        }
-    }
-
-    @Test
-    fun `Initialize view - fetch counter failed`() {
-        runBlocking {
-
-            `when`(mockGetAllCountersUseCase.invoke()).thenReturn(flow {
-                emit(Result.Failure<List<Counter>>(error = CounterError.NETWORK_ERROR))
-            })
-
-            viewModel.initializeView()
-
-            verify(mockGetAllCountersUseCase).invoke()
-            verify(mockActionsObserver).onChanged(MainViewModelActions.ShowListCounterNoInternetConnectionDialog)
         }
     }
 

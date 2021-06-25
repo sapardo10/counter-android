@@ -17,7 +17,6 @@ class CounterRemoteDataSource constructor(
     private val counterApi: CounterApi
 ) : ICounterRemoteDataSource {
 
-
     /**
      * -------------------------------------- PUBLIC METHODS ---------------------------------------
      */

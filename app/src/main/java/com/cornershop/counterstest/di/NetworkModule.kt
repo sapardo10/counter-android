@@ -17,10 +17,11 @@ import retrofit2.converter.gson.GsonConverterFactory
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
+
     @Provides
     fun provideCounterApi(): CounterApi {
         val logging = HttpLoggingInterceptor()
-        val logLevel = if(BuildConfig.DEBUG) {
+        val logLevel = if (BuildConfig.DEBUG) {
             Level.BODY
         } else {
             Level.NONE

@@ -14,6 +14,10 @@ class SuggestionsViewModel @Inject constructor(
 
     val actions = MutableLiveData<SuggestionsViewModelActions>()
 
+    /**
+     * -------------------------------------- PUBLIC METHODS ---------------------------------------
+     */
+
     fun getSuggestionsCategoriesViewModels(): List<CategorySuggestionViewModel> {
         return getAllSuggestionsCategoriesUseCase()
             .map { category ->
@@ -28,6 +32,13 @@ class SuggestionsViewModel @Inject constructor(
             }
     }
 
+    /**
+     * -------------------------------------- PRIVATE METHODS ---------------------------------------
+     */
+
+    /**
+     * Method called when the user taps on one of the suggestions on the screen
+     */
     private fun onItemTapped(suggestion: Suggestion) {
         actions.postValue(SuggestionsViewModelActions.NavigateBack(suggestion = suggestion))
     }

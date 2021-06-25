@@ -25,6 +25,10 @@ class DeleteMultipleCounterUseCase(
     private val counterRepository: ICounterRepository
 ) : IDeleteMultipleCounterUseCase {
 
+    /**
+     * -------------------------------------- PUBLIC METHODS ---------------------------------------
+     */
+
     override suspend operator fun invoke(countersToBeDeleted: List<Counter>): List<Result<Counter>> {
         val results = mutableListOf<Result<Counter>>()
         for (counter in countersToBeDeleted) {
