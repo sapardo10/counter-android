@@ -12,10 +12,24 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
+/**
+ * Implementation of [ICounterLocalDataSource]
+ */
 class CounterLocalDataSource(
     private val context: Context,
     private val counterDAO: CounterDAO
 ) : ICounterLocalDataSource {
+
+    /**
+     * -------------------------------------- PUBLIC METHODS ---------------------------------------
+     */
+
+    override suspend fun decreaseCounter(counter: Counter) {
+        withContext(Dispatchers.IO) {
+            counter.count = counter.count - 1
+            counterDAO.updateCounter(counter.toCounterEntity())
+        }
+    }
 
     override suspend fun deleteCounter(counter: Counter) {
         withContext(Dispatchers.IO) {
@@ -51,6 +65,13 @@ class CounterLocalDataSource(
                     .map { Suggestion(it) }
             )
         )
+    }
+
+    override suspend fun increaseCounter(counter: Counter) {
+        withContext(Dispatchers.IO) {
+            counter.count = counter.count + 1
+            counterDAO.updateCounter(counter.toCounterEntity())
+        }
     }
 
     override suspend fun setAllCounters(counters: List<Counter>) {

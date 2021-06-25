@@ -37,12 +37,15 @@ class CounterRepository @Inject constructor(
     }
 
     override suspend fun decreaseCounter(counter: Counter): Result<Boolean> {
+        localDataSource.decreaseCounter(counter)
         return when (val result = remoteDataSource.decreaseCounter(counter)) {
             is Result.Success -> {
                 localDataSource.setAllCounters(result.data)
                 Result.Success(data = true)
             }
             is Result.Failure -> {
+                //Rollback to the decrease
+                localDataSource.increaseCounter(counter)
                 Result.Failure(result.error)
 
             }
@@ -83,12 +86,15 @@ class CounterRepository @Inject constructor(
     }
 
     override suspend fun increaseCounter(counter: Counter): Result<Boolean> {
+        localDataSource.increaseCounter(counter)
         return when (val result = remoteDataSource.increaseCounter(counter)) {
             is Result.Success -> {
                 localDataSource.setAllCounters(result.data)
                 Result.Success(data = true)
             }
             is Result.Failure -> {
+                //Rollback to the increase
+                localDataSource.decreaseCounter(counter)
                 Result.Failure(result.error)
             }
         }

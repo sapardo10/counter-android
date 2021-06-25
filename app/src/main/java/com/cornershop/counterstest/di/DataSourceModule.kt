@@ -16,6 +16,7 @@ import dagger.hilt.components.SingletonComponent
 @Module
 @InstallIn(SingletonComponent::class)
 object DataSourceModule {
+
     @Provides
     fun provideCounterLocalDataSource(
         @ApplicationContext context: Context,

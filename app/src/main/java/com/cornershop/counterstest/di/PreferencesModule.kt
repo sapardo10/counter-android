@@ -12,12 +12,13 @@ import dagger.hilt.components.SingletonComponent
 @Module
 @InstallIn(SingletonComponent::class)
 object PreferencesModule {
+
     @Provides
     fun provideSharedPreferencesHelper(
-            @ApplicationContext context: Context
+        @ApplicationContext context: Context
     ): IUserPreferencesHelper {
         return UserPreferencesHelper(
-                context = context
+            context = context
         )
     }
 }

@@ -11,6 +11,12 @@ import kotlinx.coroutines.flow.Flow
 interface ICounterLocalDataSource {
 
     /**
+     * Method that decreases by one the [Counter] on the local database
+     * @param counter [Counter] to be increased
+     */
+    suspend fun decreaseCounter(counter: Counter)
+
+    /**
      * Method that deletes the [Counter] passed as parameter on the local database
      * @param counter [Counter] to be deleted
      */
@@ -28,6 +34,12 @@ interface ICounterLocalDataSource {
      * @return [List] of [SuggestionsCategory] saved locally on the app
      */
     fun getAllCounterCategorySuggestions(): List<SuggestionsCategory>
+
+    /**
+     * Method that increases by one the [Counter] on the local database
+     * @param counter [Counter] to be increased
+     */
+    suspend fun increaseCounter(counter: Counter)
 
     /**
      * Method that updated the local database with the [List] of [Counter] passed as parameter

@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CounterDAO {
-
     @Delete
     fun delete(counter: CounterEntity)
 
@@ -15,4 +14,7 @@ interface CounterDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun setAll(counters: List<CounterEntity>)
+
+    @Update
+    fun updateCounter(counter: CounterEntity)
 }
