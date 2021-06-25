@@ -5,12 +5,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.cornershop.counterstest.databinding.FragmentCounterItemBinding
+import com.cornershop.counterstest.utils.autoNotify
 import com.cornershop.counterstest.utils.setOnSingleClickListener
+import kotlin.properties.Delegates
 
-class CounterListRecyclerViewAdapter(
-    val deletionMode: Boolean,
-    private val values: List<CounterViewModel>
-) : RecyclerView.Adapter<CounterListRecyclerViewAdapter.ViewHolder>() {
+class CounterListRecyclerViewAdapter() :
+    RecyclerView.Adapter<CounterListRecyclerViewAdapter.ViewHolder>() {
 
     /**
      * ------------------------------------- PUBLIC METHODS ----------------------------------------
@@ -23,11 +23,19 @@ class CounterListRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = values[position]
+        val item = items[position]
         holder.bind(item)
     }
 
-    override fun getItemCount(): Int = values.size
+    override fun getItemCount(): Int = items.size
+
+    var deletionMode: Boolean by Delegates.observable(false) { _, oldValue, newValue ->
+        notifyDataSetChanged()
+    }
+
+    var items: List<CounterViewModel> by Delegates.observable(emptyList()) { _, oldList, newList ->
+        autoNotify(oldList, newList) { o, n -> o.counter.id == n.counter.id }
+    }
 
     /**
      * [ViewHolder] from [CounterListRecyclerViewAdapter]

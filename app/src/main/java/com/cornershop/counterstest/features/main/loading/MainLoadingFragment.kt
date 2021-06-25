@@ -21,4 +21,9 @@ class MainLoadingFragment : Fragment() {
     ): View? {
         return inflater.inflate(R.layout.fragment_main_loading, container, false)
     }
+
+    companion object {
+        @JvmStatic
+        fun newInstance() = MainLoadingFragment()
+    }
 }

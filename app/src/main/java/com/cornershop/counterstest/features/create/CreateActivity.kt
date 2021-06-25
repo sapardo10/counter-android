@@ -39,7 +39,10 @@ class CreateActivity : BaseActivity() {
             if (result.resultCode == Activity.RESULT_OK) {
                 val intent = result.data
                 val name = intent?.getStringExtra(SuggestionsActivity.SUGGESTION_NAME_KEY) ?: ""
-                binding.textField.setText(name, TextView.BufferType.EDITABLE)
+                with(binding.textField) {
+                    setText(name, TextView.BufferType.EDITABLE)
+                    setSelection(name.length)
+                }
                 requestFocusTextField()
             }
         }

@@ -19,7 +19,6 @@ import com.cornershop.counterstest.utils.buildDialog
 import com.cornershop.counterstest.utils.setOnSingleClickListener
 import dagger.hilt.android.AndroidEntryPoint
 
-
 @AndroidEntryPoint
 class MainListFragment : Fragment() {
 
@@ -67,11 +66,7 @@ class MainListFragment : Fragment() {
     private fun configureCounterList() {
         with(binding.list) {
             layoutManager = LinearLayoutManager(context)
-            adapter =
-                CounterListRecyclerViewAdapter(
-                    deletionMode = viewModel.viewState.value == MainViewState.DELETE_STATE,
-                    listOf()
-                )
+            adapter = CounterListRecyclerViewAdapter()
         }
     }
 
@@ -105,6 +100,7 @@ class MainListFragment : Fragment() {
             setSearchableInfo(searchManager!!.getSearchableInfo(activity?.componentName))
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
+                    viewModel.closeDeleteToolbar()
                     return true
                 }
 
@@ -430,14 +426,15 @@ class MainListFragment : Fragment() {
      * @param list [List] of [CounterViewModel] to be shown
      */
     private fun updateList(deletionMode: Boolean, list: List<CounterViewModel>?) {
+        if (list == null) {
+            return
+        }
         val finalList = list ?: listOf()
         val filteredList = viewModel.filterCountersViewModels(
             finalList
         )
-        binding.list.adapter = CounterListRecyclerViewAdapter(
-            deletionMode = deletionMode,
-            filteredList
-        )
+        (binding.list.adapter as? CounterListRecyclerViewAdapter)?.items = filteredList
+        (binding.list.adapter as? CounterListRecyclerViewAdapter)?.deletionMode = deletionMode
         updateLabels(filteredList)
     }
 

@@ -3,7 +3,6 @@ package com.cornershop.counterstest.features.main
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.fragment.app.add
 import androidx.fragment.app.commit
 import com.cornershop.counterstest.R
 import com.cornershop.counterstest.core.BaseActivity
@@ -11,7 +10,6 @@ import com.cornershop.counterstest.databinding.ActivityMainBinding
 import com.cornershop.counterstest.features.create.CreateActivity
 import com.cornershop.counterstest.features.main.emptystate.MainEmptyStateFragment
 import com.cornershop.counterstest.features.main.list.MainListFragment
-import com.cornershop.counterstest.features.main.loading.MainLoadingFragment
 import com.cornershop.counterstest.utils.setOnSingleClickListener
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -34,7 +32,7 @@ class MainActivity : BaseActivity() {
         initializeInteractionsListener()
         supportFragmentManager.commit {
             setReorderingAllowed(true)
-            add<MainLoadingFragment>(R.id.fragment_container_view)
+            replace(R.id.fragment_container_view, MainListFragment.newInstance())
         }
     }
 
